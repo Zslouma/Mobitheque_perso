@@ -164,40 +164,20 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             {
                 Console.WriteLine("AuthenticationAndRedirect2: Name = {0} ; Value = {1} ; Domain = {2}", cookie.Name, cookie.Value, cookie.Domain);
             }
-            var data = await this.requestService.GetSummary();
+            var status = await this.requestService.RenderAccountWebFrame(new AccountWebFrameOptions());
             cookiesArray = this.requestService.GetCookies().ToArray();
             foreach (var cookie in cookiesArray)
             {
                 Console.WriteLine("AuthenticationAndRedirect3: Name = {0} ; Value = {1} ; Domain = {2}", cookie.Name, cookie.Value, cookie.Domain);
             }
-            if (data != null && data.Success)
+            if (status.Success == true)
             {
-                var b = await App.Database.GetByUsernameAsync(username);
-                b.Active = false;
-                await App.Database.SaveItemAsync(b);
-                username = data.D.AccountSummary.DisplayName;
-                CookiesSave tempo = await App.Database.GetByUsernameAsync(username);
-                item = tempoCookiesSave != null ? tempo : new CookiesSave();
-                item.Active = true;
-                item.Username = username;
-                item.Cookies = JsonConvert.SerializeObject(cookiesArray);
-                item.Library = this.Departement.Library;
-                item.LibraryCode = this.Departement.LibraryCode;
-                item.LibraryUrl = this.Departement.LibraryUrl;
-                item.DomainUrl = this.Departement.DomainUrl;
-                item.ForgetMdpUrl = this.Departement.ForgetMdpUrl;
-                item.Department = this.Departement.Department;
-                item.SearchScenarioCode = this.Departement.SearchScenarioCode;
-                item.EventsScenarioCode = this.Departement.EventsScenarioCode;
-                item.IsEvent = this.Departement.IsEvent;
-                item.RememberMe = this.Departement.RememberMe;
-                item.IsKm = this.Departement.IsKm;
-                item.BuildingInfos = this.Departement.BuildingInfos;
-                await App.Database.SaveItemAsync(item);
-                this.requestService.LoadCookies(JsonConvert.DeserializeObject<Cookie[]>(item.Cookies));
+                await this.navigationService.Navigate<MasterDetailViewModel>();
             }
-            await this.navigationService.Navigate<MasterDetailViewModel>();
-
+            else
+            {
+                Console.WriteLine("Une erreur est survenue");
+            }
         }
     }
 }

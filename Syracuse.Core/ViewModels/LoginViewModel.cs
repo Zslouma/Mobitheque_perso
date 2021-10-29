@@ -140,7 +140,6 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             {
                 this.DisplayAlert(ApplicationResource.Error, x.Message, ApplicationResource.ButtonValidation);
             });
-
             if (result == null)
                 return false;
             else  if (!result.Success)
@@ -190,6 +189,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
                 await App.Database.SaveItemAsync(b);
                 this.requestService.LoadCookies(JsonConvert.DeserializeObject<Cookie[]>(b.Cookies));
             }
+            var status = await this.requestService.RenderAccountWebFrame(new AccountWebFrameOptions());
             return true;
         }
 

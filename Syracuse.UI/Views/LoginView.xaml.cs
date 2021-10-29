@@ -39,7 +39,6 @@ namespace Syracuse.Mobitheque.UI.Views
         }
         protected override void OnAppearing()
         {
-            base.OnAppearing();
             ListSSO.Children.Clear();
             foreach (var item in this.ViewModel.ListSSO)
             {
@@ -53,6 +52,9 @@ namespace Syracuse.Mobitheque.UI.Views
                 ListSSO.Children.Add(button);
             }
             ListSSO.VerticalOptions = LayoutOptions.FillAndExpand;
+            FormLayout.VerticalOptions = LayoutOptions.FillAndExpand;
+            this.ViewModel.RaiseAllPropertiesChanged();
+            base.OnAppearing();
         }
         public void Handle_Focus(object sender, FocusEventArgs args)
         {

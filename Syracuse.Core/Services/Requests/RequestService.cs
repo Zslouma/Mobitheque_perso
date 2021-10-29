@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Syracuse.Mobitheque.Core.Services.Requests
@@ -580,6 +581,51 @@ namespace Syracuse.Mobitheque.Core.Services.Requests
             }
         }
 
+        public async Task<InstanceResult<string>> RenderAccountWebFrame(AccountWebFrameOptions options, Action<Exception> error = null)
+        {
+            if (!App.AppState.NetworkConnection)
+            {
+                Debug.WriteLine("NetworkConnection" + App.AppState.NetworkConnection);
+            }
+            await this.InitializeHttpClient();
+            try
+            {
+                this.token = this.Timestamp();
+                List<string> collectionstring = new List<string>();
+                string codebare = "";
+                string username = "";
+                var status = await this.requests.RenderAccountWebFrame<InstanceResult<string>>(options);
+                if (status.Success)
+                {
+                    string regex = "<span [^>]*class=(\"|')user-name(\"|')>(.*?)</span>";
+                    Match UserNameMatch = new Regex(regex, RegexOptions.Singleline | RegexOptions.Compiled).Match(status.D);
+                    username = UserNameMatch.Groups[3].Value;
+                    regex = "<p [^>]*class=(\"|')myaccount-profile-entry(\"|')>(.*?)</p>";
+                    MatchCollection matches = new Regex(regex, RegexOptions.Singleline | RegexOptions.Compiled).Matches(status.D);
+                    regex = "<span [^>]*class=(\"|')account-value(\"|')>(.*?)</span>";
+                    foreach (Match match in matches)
+                    {
+                        collectionstring.Add(match.Value);
+                        if (match.Value.Contains("Code-barres"))
+                        {
+                            Match barecode = new Regex(regex, RegexOptions.Singleline | RegexOptions.Compiled).Match(match.Value);
+                            codebare = barecode.Groups[3].Value;
 
+                        }
+                    }
+                    await UpdateCookies();
+                    CookiesSave user = await App.Database.GetActiveUser();
+                    if (username != "") user.Username = username;
+                    if (codebare != "") user.CodeBare = codebare;
+                    await App.Database.SaveItemAsync(user);
+                }
+                return status;
+            }
+            catch (Exception ex)
+            {
+                error?.Invoke(ex);
+                return new InstanceResult<string>();
+            }
+        }
     }
 }

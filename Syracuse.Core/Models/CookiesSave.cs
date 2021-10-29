@@ -7,11 +7,9 @@ namespace Syracuse.Mobitheque.Core.Models
     {
         [PrimaryKey, AutoIncrement]
         public int ID { get; set; }
-
         public bool Active { get; set; } = true;
-
         public string Username { get; set; }
-
+        public string CodeBare { get; set; }
         private string searchValue { get; set; }
         public string SearchValue {
             get { return this.searchValue; }

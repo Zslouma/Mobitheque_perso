@@ -57,5 +57,8 @@ namespace Syracuse.Mobitheque.Core.Services.Requests
 
         [Post("/Portal/Services/UserAccountService.svc/CancelBookings")]
         Task<T> CancelBooking<T>([Body]BookingOptions body);
+
+        [Post("/Portal/Search.svc/RenderAccountWebFrame")]
+        Task<T> RenderAccountWebFrame<T>([Body] AccountWebFrameOptions body);
     }
 }
