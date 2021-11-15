@@ -522,7 +522,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
 
         private async Task PerformSearch(string search = null, string docbase = "SYRACUSE")
         {
-            if (docbase != null || docbase == "")
+            if (docbase == null || docbase == "")
             {
                 docbase = "SYRACUSE";
             }
