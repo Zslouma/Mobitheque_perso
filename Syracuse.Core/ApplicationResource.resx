@@ -227,6 +227,9 @@ Cancellation is final.</value>
   <data name="HoldingDisponibilityTextDateBack" xml:space="preserve">
     <value>Expected return on {0} at {1}</value>
   </data>
+  <data name="HoldingLibraryChoice" xml:space="preserve">
+    <value>Location of provision</value>
+  </data>
   <data name="Home" xml:space="preserve">
     <value>Home</value>
   </data>

@@ -162,12 +162,13 @@
                                             </StackLayout>
                                             <!--#region Holding -->
 
-                                            <StackLayout   IsVisible="{Binding DisplayValues.Library.success}">
+                                            <StackLayout   IsVisible="{Binding DisplayValues.Library.success}" VerticalOptions="FillAndExpand">
                                                 <StackLayout IsVisible="{Binding DisplayValues.Library.Dataa.IsHoldings}">
                                                     <StackLayout BackgroundColor="#bfbfbf" Padding="10">
                                                         <material:MaterialLabel FontSize="Large" Text="{x:Static local:AppResource.Copies}" TextColor="White"/>
                                                     </StackLayout>
                                                     <StackLayout
+                                                        x:Name="ListHolding"
                                                         BindableLayout.ItemsSource="{Binding DisplayValues.Library.Dataa.Holdings}" 
                                                         VerticalOptions="FillAndExpand">
                                                         <BindableLayout.ItemTemplate>
@@ -187,7 +188,7 @@
                                                                         <StackLayout  Grid.Row="0" Grid.Column="1">
                                                                             <Label Text="{Binding DisponibilityText}"/>
                                                                             <Label TextColor="Gray" Text="{Binding DisplayValue}"/>
-                                                                            <Button x:Name="HoldingButton" IsVisible="{Binding isReservable}" BackgroundColor="{d:DynamicResource AppBackgroundColor}" Text="{x:Static local:AppResource.Book}" TextColor="White" BindingContext="{Binding .}" Clicked="HoldingButton_Clicked"/>
+                                                                            <Button x:Name="HoldingButton" IsVisible="{Binding isReservable}" BackgroundColor="{d:DynamicResource AppBackgroundColor}" Text="{x:Static local:AppResource.Book}" TextColor="White" CommandParameter="{Binding Source={x:Reference ListHolding}, Path=BindingContext.DisplayValues.Library.Dataa.HoldingPlaces}" BindingContext="{Binding .}" Clicked="HoldingButton_Clicked"/>
                                                                         </StackLayout>
                                                                     </Grid>
                                                                 </StackLayout>
@@ -240,7 +241,7 @@
                             </DataTemplate>
                         </CarouselView.ItemTemplate>
                     </CarouselView>
-                    <Label x:Name="IndexPage" IsVisible="{Binding IsPositionVisible}" HorizontalOptions="Center" Margin="0,0,0,15" Text="{Binding DisplayPosition}"></Label>
+                    <Label x:Name="IndexPage" IsVisible="{Binding IsPositionVisible}" HorizontalOptions="Center" Margin="0,0,0,15" Text="{Binding DisplayPosition}"/>
                 </StackLayout>
                 <AbsoluteLayout IsVisible="{Binding IsBusy}" VerticalOptions="FillAndExpand" Opacity="0.6" BackgroundColor="Gray" >
                     <ActivityIndicator IsRunning="True"  AbsoluteLayout.LayoutFlags="PositionProportional" Color="White" AbsoluteLayout.LayoutBounds=".5,.5,-1,-1" />

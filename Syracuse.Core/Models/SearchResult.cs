@@ -525,6 +525,8 @@ namespace Syracuse.Mobitheque.Core.Models
 
         public DisplayValues DisplayValues { get; set; } = new DisplayValues();
 
+        public bool HaveDisplayValues { get { return DisplayValues != null; } }
+
 
         public Result Clone()
         {
