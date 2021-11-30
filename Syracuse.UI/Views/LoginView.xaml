@@ -97,6 +97,7 @@
                     />
 
                     <Button Text="{x:Static local:AppResource.PasswordForget}"
+                            IsVisible="{Binding CanDisplayForgetMDP}"
                             TextColor="AliceBlue"
                             BackgroundColor="Transparent"
                             FontFamily=""

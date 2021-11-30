@@ -88,6 +88,8 @@ namespace Syracuse.Mobitheque.Core.ViewModels
 
         public CookiesSave department;
 
+        public bool CanDisplayForgetMDP { get { return department.ForgetMdpUrl != ""; } }
+
         public LoginViewModel(
                               IRequestService requestService,
                               IGeolocationService geolocationService, 
