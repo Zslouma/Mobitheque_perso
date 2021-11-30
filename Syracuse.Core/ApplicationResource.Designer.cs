@@ -387,6 +387,15 @@ namespace Syracuse.Mobitheque.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Location of provision.
+        /// </summary>
+        public static string HoldingLibraryChoice {
+            get {
+                return ResourceManager.GetString("HoldingLibraryChoice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Home.
         /// </summary>
         public static string Home {

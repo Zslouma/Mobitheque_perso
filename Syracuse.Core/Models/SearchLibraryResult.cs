@@ -16,6 +16,14 @@ namespace Syracuse.Mobitheque.Core.Models
         public Dataa Dataa { get; set; }
             
     }
+
+    public class HoldingPlace
+    {
+        public string Code { get; set; }
+        public bool IsDefault { get; set; }
+        public string Libelle { get; set; }
+        public string TopLevelScopeCode { get; set; }
+    }
     public class HoldingColumn
     {
         public string Name { get; set; }
@@ -74,57 +82,88 @@ namespace Syracuse.Mobitheque.Core.Models
         public IList<string> sys_base { get; set; }
 
     }
-
     public class Holdings
     {
+        [JsonProperty("AlternativeCote")]
+        public object AlternativeCote { get; set; }
         [JsonProperty("Barcode")]
-        public string Barcode { get; set; } = "";
-
+        public string Barcode { get; set; }
+        [JsonProperty("BaseName")]
+        public string BaseName { get; set; }
         [JsonProperty("BookingTooltip")]
-        public string BookingTooltip { get; set; } = "";
-
+        public string BookingTooltip { get; set; }
+        [JsonProperty("BookingTooltipCode")]
+        public string BookingTooltipCode { get; set; }
+        [JsonProperty("Category")]
+        public object Category { get; set; }
         [JsonProperty("Cote")]
-        public string Cote { get; set; } = "";
-
-        [JsonProperty("Site")]
-        public string Site { get; set; } = "";
-
+        public string Cote { get; set; }
+        [JsonProperty("HoldingId")]
+        public string HoldingId { get; set; }
+        [JsonProperty("HoldingPlace")]
+        public object HoldingPlace { get; set; }
+        [JsonProperty("IncludedInSubscription")]
+        public bool IncludedInSubscription { get; set; }
+        [JsonProperty("InfoTooltip")]
+        public string InfoTooltip { get; set; }
+        [JsonProperty("IsAvailable")]
+        public bool IsAvailable { get; set; }
+        [JsonProperty("IsExpo")]
+        public bool IsExpo { get; set; }
+        [JsonProperty("IsLoanable")]
+        public bool IsLoanable { get; set; }
+        [JsonProperty("IsReservable")]
+        public bool IsReservable { get; set; }
+        [JsonProperty("IsSerial")]
+        public bool IsSerial { get; set; }
+        [JsonProperty("IsTransmissible")]
+        public bool IsTransmissible { get; set; }
+        [JsonProperty("LibFas")]
+        public object LibFas { get; set; }
         [JsonProperty("Localisation")]
         public string Localisation { get; set; }
-
+        [JsonProperty("NbResa")]
+        public int NbResa { get; set; }
+        [JsonProperty("NewItem")]
+        public bool NewItem { get; set; }
+        [JsonProperty("Other")]
+        public List<object> Other { get; set; }
+        [JsonProperty("Place")]
+        public string Place { get; set; }
+        [JsonProperty("RecordId")]
+        public string RecordId { get; set; }
+        [JsonProperty("Resa")]
+        public string Resa { get; set; }
+        [JsonProperty("ReservationMode")]
+        public int ReservationMode { get; set; }
+        [JsonProperty("Section")]
+        public string Section { get; set; }
+        [JsonProperty("SectionCode")]
+        public string SectionCode { get; set; }
+        [JsonProperty("Site")]
+        public string Site { get; set; }
+        [JsonProperty("SiteCode")]
+        public string SiteCode { get; set; }
+        [JsonProperty("SourceType")]
+        public int SourceType { get; set; }
+        [JsonProperty("Statut")]
+        public string Statut { get; set; }
+        [JsonProperty("TopLevelScope")]
+        public string TopLevelScope { get; set; }
+        [JsonProperty("TopLevelScopeCode")]
+        public string TopLevelScopeCode { get; set; }
+        [JsonProperty("Type")]
+        public string Type { get; set; }
         [JsonProperty("WhenBack")]
         public string WhenBack { get; set; }
-
         public bool IsHaveWhenBack
         {
             get
             {
-               return !String.IsNullOrEmpty(WhenBack);
+                return !String.IsNullOrEmpty(WhenBack);
             }
         }
-
-        [JsonProperty("Type")]
-        public string Type { get; set; } = "";
-
-        [JsonProperty("Section")]
-        public string Section { get; set; }
-
-        [JsonProperty("Statut")]
-        public string Statut { get; set; } = "";
-
-        [JsonProperty("Holdingid")]
-        public string Holdingid { get; set; } = "";
-
-        [JsonProperty("RecordId")]
-        public string RecordId { get; set; } = "";
-
-        [JsonProperty("BaseName")]
-        public string BaseName { get; set; } = "";
-
-        [JsonProperty("isReservable")]
-        public bool isReservable { get; set; } = false;
-
-        public string StatusColor
+        public string StatusColor 
         {
             get
             {
@@ -138,8 +177,75 @@ namespace Syracuse.Mobitheque.Core.Models
         public Dictionary<string, bool> DisplayHoldings { get; set; }
         public string DisplayValue { get; set; }
         public string DisponibilityText { get; set; }
-
     }
+    //public class Holdings
+    //{
+    //    [JsonProperty("Barcode")]
+    //    public string Barcode { get; set; } = "";
+
+    //    [JsonProperty("BookingTooltip")]
+    //    public string BookingTooltip { get; set; } = "";
+
+    //    [JsonProperty("Cote")]
+    //    public string Cote { get; set; } = "";
+
+    //    [JsonProperty("Site")]
+    //    public string Site { get; set; } = "";
+
+    //    [JsonProperty("SiteCode")]
+    //    public string SiteCode { get; set; } = "";
+
+    //    [JsonProperty("Localisation")]
+    //    public object Localisation { get; set; }
+
+    //    [JsonProperty("WhenBack")]
+    //    public string WhenBack { get; set; }
+
+    //    public bool IsHaveWhenBack
+    //    {
+    //        get
+    //        {
+    //           return !String.IsNullOrEmpty(WhenBack);
+    //        }
+    //    }
+
+    //    [JsonProperty("Type")]
+    //    public string Type { get; set; } = "";
+
+    //    [JsonProperty("Section")]
+    //    public string Section { get; set; }
+
+    //    [JsonProperty("Statut")]
+    //    public string Statut { get; set; } = "";
+
+    //    [JsonProperty("Holdingid")]
+    //    public string Holdingid { get; set; } = "";
+
+    //    [JsonProperty("RecordId")]
+    //    public string RecordId { get; set; } = "";
+
+    //    [JsonProperty("BaseName")]
+    //    public string BaseName { get; set; } = "";
+
+    //    [JsonProperty("isReservable")]
+    //    public bool isReservable { get; set; } = false;
+
+    //    public string StatusColor
+    //    {
+    //        get
+    //        {
+    //            if (Statut == "En rayon")
+    //            {
+    //                return "#97c67d";
+    //            }
+    //            return "#fdc76b";
+    //        }
+    //    }
+    //    public Dictionary<string, bool> DisplayHoldings { get; set; }
+    //    public string DisplayValue { get; set; }
+    //    public string DisponibilityText { get; set; }
+
+    //}
 
     public class HoldingsStatement
     {
@@ -152,7 +258,7 @@ namespace Syracuse.Mobitheque.Core.Models
         /// Localisation (ex : étagère, étage, etc.)
         /// </summary>
         [JsonProperty("Localisation")]
-        public string Localisation { get; set; }
+        public object Localisation { get; set; }
         /// <summary>
         /// Type.
         /// </summary>
@@ -242,7 +348,7 @@ namespace Syracuse.Mobitheque.Core.Models
     public class Dataa
     {
         public IList<HoldingColumn> HoldingColumns { get; set; }
-        public IList<object> HoldingPlaces { get; set; }
+        public IList<HoldingPlace> HoldingPlaces { get; set; }
 
         [JsonProperty("Holdings")]
         public List<Holdings> Holdings { get; set; }

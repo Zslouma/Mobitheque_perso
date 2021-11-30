@@ -8,7 +8,7 @@ using System.Windows.Input;
 using Xamarin.Essentials;
 using System.Threading.Tasks;
 using Syracuse.Mobitheque.Core;
-
+using System.Collections.Generic;
 
 namespace Syracuse.Mobitheque.UI.Views
 {
@@ -103,11 +103,36 @@ namespace Syracuse.Mobitheque.UI.Views
 
         private async void HoldingButton_Clicked(object sender, EventArgs e)
         {
+            List<HoldingPlace> commandParameters = ((Button)sender).CommandParameter as List<HoldingPlace>;
             Holdings data = ((Button)sender).BindingContext as Holdings;
+            List<string> holdiongplaces = new List<string>();
+            if (commandParameters != null && commandParameters.Count > 0)
+            {
+                foreach (var item in commandParameters)
+                {
+                    holdiongplaces.Add(item.Libelle);
+                }
+                string value = await DisplayActionSheet(ApplicationResource.HoldingLibraryChoice, ApplicationResource.Cancel, null, holdiongplaces.ToArray() );
+                if (value == ApplicationResource.Cancel)
+                {
+                    return;
+                }
+                else
+                {
+                    foreach (var item in commandParameters)
+                    {
+                        if (item.Libelle == value)
+                        {
+                            data.HoldingPlace = item.Code;
+                        }
+                    }
+                }
+
+            }
             bool answer = await DisplayAlert(ApplicationResource.Warning, String.Format(ApplicationResource.HoldingChoice, data.Site), ApplicationResource.Book, ApplicationResource.Cancel);
             if (answer)
             {
-                await this.ViewModel.Holding(data.Holdingid, data.RecordId, data.BaseName);
+                await this.ViewModel.Holding(data);
             }
         }
 

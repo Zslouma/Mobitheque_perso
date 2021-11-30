@@ -522,7 +522,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
 
         private async Task PerformSearch(string search = null, string docbase = "SYRACUSE")
         {
-            if (docbase != null || docbase == "")
+            if (docbase == null || docbase == "")
             {
                 docbase = "SYRACUSE";
             }
@@ -544,29 +544,31 @@ namespace Syracuse.Mobitheque.Core.ViewModels
 
         }
 
-        public async Task Holding(string Holdingid, string RecordId, string BaseName)
+        public async Task Holding(Holdings data)
         {
-            var options = new HoldingItem()
-            {
-                HoldingId = Holdingid,
-                RecordId = RecordId,
-                BaseName = BaseName
-                
-            };
+            var options = new HoldingItem(data);
 
-            PlaceReservationResult res = await this.requestService.PlaceReservation(new PlaceReservationOptions() { HoldingItem = options });
-            if (res == null)
+            try
             {
-                this.DisplayAlert(ApplicationResource.Error, ApplicationResource.ErrorOccurred, ApplicationResource.ButtonValidation);
-            }
-            else if (!res.Success)
+                PlaceReservationResult res = await this.requestService.PlaceReservation(new PlaceReservationOptions() { HoldingItem = options });
+                if (res == null)
+                {
+                    this.DisplayAlert(ApplicationResource.Error, ApplicationResource.ErrorOccurred, ApplicationResource.ButtonValidation);
+                }
+                else if (!res.Success)
+                {
+                    this.DisplayAlert(ApplicationResource.Error, ApplicationResource.FailBookingRequest, ApplicationResource.ButtonValidation);
+                }
+                else
+                {
+                    await PerformSearch(null);
+                    this.DisplayAlert(ApplicationResource.Success, ApplicationResource.SuccessBookingRequest, ApplicationResource.ButtonValidation);
+                }
+                }
+            catch (Exception ex)
             {
-                this.DisplayAlert(ApplicationResource.Error, ApplicationResource.FailBookingRequest, ApplicationResource.ButtonValidation);
-            }
-            else
-            {
-                await PerformSearch(null);
-                this.DisplayAlert(ApplicationResource.Success, ApplicationResource.SuccessBookingRequest, ApplicationResource.ButtonValidation);
+                Console.WriteLine(ex.Message);
+                throw;
             }
         }
         public void OpenWebBrowser(string parameter)

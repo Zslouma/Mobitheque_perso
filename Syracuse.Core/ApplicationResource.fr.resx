@@ -227,6 +227,9 @@ L’annulation est définitive.</value>
   <data name="HoldingDisponibilityTextDateBack" xml:space="preserve">
     <value>Retour prévu le {0} à {1}</value>
   </data>
+  <data name="HoldingLibraryChoice" xml:space="preserve">
+    <value>Emplacement de mise à disposition</value>
+  </data>
   <data name="Home" xml:space="preserve">
     <value>Accueil</value>
   </data>
