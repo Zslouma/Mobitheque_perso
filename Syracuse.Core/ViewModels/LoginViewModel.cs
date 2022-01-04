@@ -88,6 +88,8 @@ namespace Syracuse.Mobitheque.Core.ViewModels
 
         public CookiesSave department;
 
+        public List<StandartViewList> departmentStandarViewList;
+
         public bool CanDisplayForgetMDP { get { return department.ForgetMdpUrl != ""; } }
 
         public LoginViewModel(
@@ -152,46 +154,36 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             CookiesSave b = await App.Database.GetByUsernameAsync(this.username);
             if (b == null)
             {
-                CookiesSave item = new CookiesSave();
-                item.Username = this.username;
-                item.Active = true;
-                item.Cookies = JsonConvert.SerializeObject(this.requestService.GetCookies().ToArray());
-                item.Library = department.Library;
-                item.LibraryCode = department.LibraryCode;
-                item.LibraryUrl = department.LibraryUrl;
-                item.DomainUrl = department.DomainUrl;
-                item.ForgetMdpUrl = department.ForgetMdpUrl;
-                item.Department = department.Department;
-                item.SearchScenarioCode = department.SearchScenarioCode;
-                item.EventsScenarioCode = department.EventsScenarioCode;
-                item.IsEvent = department.IsEvent;
-                item.RememberMe = department.RememberMe;
-                item.IsKm = department.IsKm;
-                item.BuildingInfos = department.BuildingInfos;
-                await App.Database.SaveItemAsync(item);
-                this.requestService.LoadCookies(JsonConvert.DeserializeObject<Cookie[]>(item.Cookies));
+                b = new CookiesSave();
             }
-            else
+            b.Username = this.username;
+            b.Active = true;
+            b.Cookies = JsonConvert.SerializeObject(this.requestService.GetCookies().ToArray());
+            b.Library = department.Library;
+            b.LibraryCode = department.LibraryCode;
+            b.LibraryUrl = department.LibraryUrl;
+            b.DomainUrl = department.DomainUrl;
+            b.ForgetMdpUrl = department.ForgetMdpUrl;
+            b.Department = department.Department;
+            b.SearchScenarioCode = department.SearchScenarioCode;
+            b.EventsScenarioCode = department.EventsScenarioCode;
+            b.IsEvent = department.IsEvent;
+            b.RememberMe = department.RememberMe;
+            b.IsKm = department.IsKm;
+            b.BuildingInfos = department.BuildingInfos;
+            await App.Database.SaveItemAsync(b);
+            foreach (var item in this.departmentStandarViewList)
             {
-                b.Username = this.username;
-                b.Active = true;
-                b.Cookies = JsonConvert.SerializeObject(this.requestService.GetCookies().ToArray());
-                b.Library = department.Library;
-                b.LibraryCode = department.LibraryCode;
-                b.LibraryUrl = department.LibraryUrl;
-                b.DomainUrl = department.DomainUrl;
-                b.ForgetMdpUrl = department.ForgetMdpUrl;
-                b.Department = department.Department;
-                b.SearchScenarioCode = department.SearchScenarioCode;
-                b.EventsScenarioCode = department.EventsScenarioCode;
-                b.IsEvent = department.IsEvent;
-                b.RememberMe = department.RememberMe;
-                b.IsKm = department.IsKm;
-                b.BuildingInfos = department.BuildingInfos;
-                await App.Database.SaveItemAsync(b);
-                this.requestService.LoadCookies(JsonConvert.DeserializeObject<Cookie[]>(b.Cookies));
+                item.Username = this.username;
             }
-            var status = await this.requestService.RenderAccountWebFrame(new AccountWebFrameOptions());
+            List<StandartViewList> removeStandardList = await App.Database.GetActiveStandartView(b);
+            foreach (var removeItem in removeStandardList)
+            {
+                await App.Database.DeleteItemAsync(removeItem);
+            }
+            await App.Database.SaveItemAsync(this.departmentStandarViewList);
+            this.requestService.LoadCookies(JsonConvert.DeserializeObject<Cookie[]>(b.Cookies));
+            await this.requestService.RenderAccountWebFrame(new AccountWebFrameOptions());
             return true;
         }
 
@@ -214,6 +206,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
         public override void Prepare(LoginParameters parameter)
         {
             this.department = parameter.CookiesSave;
+            this.departmentStandarViewList = parameter.StandartViewList;
             this.ListSSO = parameter.ListSSO;
             this.Library = this.department.Library;
         }

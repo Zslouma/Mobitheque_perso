@@ -4,6 +4,7 @@ using Syracuse.Mobitheque.Core.Models;
 using Syracuse.Mobitheque.Core.Services.Files;
 using Syracuse.Mobitheque.Core.Services.Requests;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
@@ -26,7 +27,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             this.navigationService = navigationService;
         }
 
-        public override void Prepare(string parameter)
+        public async override void Prepare(string parameter)
         {
             param = parameter;
             base.Prepare();
@@ -36,11 +37,11 @@ namespace Syracuse.Mobitheque.Core.ViewModels
         {
             Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
             this.Connectivity_test().Wait();
-            this.JsonSynchronisation();
             base.Start();
         }
          public async Task JsonSynchronisation()
         {
+            Console.WriteLine("JsonSynchronisation");
             CookiesSave user = await App.Database.GetActiveUser();
             if (user != null)
             {
@@ -56,6 +57,26 @@ namespace Syracuse.Mobitheque.Core.ViewModels
                     user.IsKm = library.Config.IsKm;
                     user.BuildingInfos = JsonConvert.SerializeObject(library.Config.BuildingInformations);
                     await App.Database.SaveItemAsync(user);
+                    List<StandartViewList> standartViewList = new List<StandartViewList>();
+                    foreach (var item in library.Config.StandardsViews)
+                    {
+                        var tempo = new StandartViewList();
+
+                        tempo.ViewName = item.ViewName;
+                        tempo.ViewIcone = item.ViewIcone;
+                        Console.WriteLine("ViewIcone :" + item.ViewIcone);
+                        tempo.ViewQuery = item.ViewQuery;
+                        tempo.ViewScenarioCode = item.ViewScenarioCode;
+                        tempo.Username = user.Username;
+                        tempo.Library = library.Name;
+                        standartViewList.Add(tempo);
+                    }
+                    List<StandartViewList> removeStandardList = await App.Database.GetActiveStandartView(user);
+                    foreach (var removeItem in removeStandardList)
+                    {
+                        await App.Database.DeleteItemAsync(removeItem);
+                    }
+                    await App.Database.SaveItemAsync(standartViewList);
                 }
                 catch (Exception e)
                 {
@@ -74,6 +95,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
         {
             base.ViewAppearing();
             await this.Connectivity_test();
+            await this.JsonSynchronisation();
             CookiesSave user = await App.Database.GetActiveUser();
             Cookie[] cookies = JsonConvert.DeserializeObject<Cookie[]>(user.Cookies);
             bool found = false;
