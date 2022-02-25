@@ -207,7 +207,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
         {
             this.department = parameter.CookiesSave;
             this.departmentStandarViewList = parameter.StandartViewList;
-            this.ListSSO = parameter.ListSSO;
+            this.ListSSO = parameter.ListSSO == null ? new List<SSO>() : parameter.ListSSO;
             this.Library = this.department.Library;
         }
 

@@ -199,32 +199,31 @@ namespace Syracuse.Mobitheque.Core.ViewModels
         {
             try
             {
-
-            this.IsBusy = true;
-            this.IsCarouselVisibility = false;
-            await this.CanHolding();
-            this.SearchOptions = parameter.searchOptions;
-            this.NbrResults = parameter.nbrResults;
-            var parameterTempo = parameter.parameter;
-            this.ItemsSource = new ObservableCollection<Result>(parameterTempo[1].D.Results);
-            var tempo = parameterTempo[1].D.Results.ToList().FindIndex(x => x == parameterTempo[0].D.Results[0]);
-            this.StartDataPosition = tempo - 10 >= 0 ? tempo - 10 : 0;
-            this.EndDataPosition = tempo + 10 < parameterTempo[1].D.Results.Length ? tempo + 10 : parameterTempo[1].D.Results.Length - 1;
-            await this.FormateToCarrousel(this.StartDataPosition, this.EndDataPosition, false);
-            this.CurrentItem = this.ItemsSource[tempo];
-            this.Position = tempo;
-            this.IsPositionVisible = true;
-            if (tempo >= (this.ItemsSource.Count() - 5) && int.Parse(this.NbrResults) > this.ItemsSource.Count)
-            {
-                await LoadMore(false);
-            }
-            this.ItemsSource[0] = this.ItemsSource[0].Clone();
-            await this.RaisePropertyChanged(nameof(this.ItemsSource));
-            await this.RaisePropertyChanged(nameof(this.CurrentItem));
-            await this.RaisePropertyChanged(nameof(this.Position));
-            await this.RaiseAllPropertiesChanged();
-            this.IsCarouselVisibility = true;
-            this.IsBusy = false;
+                this.IsBusy = true;
+                this.IsCarouselVisibility = false;
+                await this.CanHolding();
+                this.SearchOptions = parameter.searchOptions;
+                this.NbrResults = parameter.nbrResults;
+                var parameterTempo = parameter.parameter;
+                this.ItemsSource = new ObservableCollection<Result>(parameterTempo[1].D.Results);
+                var tempo = parameterTempo[1].D.Results.ToList().FindIndex(x => x == parameterTempo[0].D.Results[0]);
+                this.StartDataPosition = tempo - 10 >= 0 ? tempo - 10 : 0;
+                this.EndDataPosition = tempo + 10 < parameterTempo[1].D.Results.Length ? tempo + 10 : parameterTempo[1].D.Results.Length - 1;
+                await this.FormateToCarrousel(this.StartDataPosition, this.EndDataPosition, false);
+                this.CurrentItem = this.ItemsSource[tempo];
+                this.Position = tempo;
+                this.IsPositionVisible = true;
+                if (tempo >= (this.ItemsSource.Count() - 5) && int.Parse(this.NbrResults) > this.ItemsSource.Count)
+                {
+                    await LoadMore(false);
+                }
+                this.ItemsSource[0] = this.ItemsSource[0].Clone();
+                await this.RaisePropertyChanged(nameof(this.ItemsSource));
+                await this.RaisePropertyChanged(nameof(this.CurrentItem));
+                await this.RaisePropertyChanged(nameof(this.Position));
+                await this.RaiseAllPropertiesChanged();
+                this.IsCarouselVisibility = true;
+                this.IsBusy = false;
             }
             catch (Exception ex)
             {
@@ -304,9 +303,14 @@ namespace Syracuse.Mobitheque.Core.ViewModels
         }
         public async Task FormateToCarrousel(int start, int end, bool endIsBusy = true)
         {
+            try
+            {
             this.IsBusy = true;
             for (int i = start; i <= end; i++)
             {
+                try
+                {
+                Console.WriteLine("FormateToCarrousel :"+i);
                 if (this.ItemsSource[i].Resource.Desc != null)
                     this.ItemsSource[i].DisplayValues.Desc = this.ItemsSource[i].Resource.Desc;
                 this.ItemsSource[i].DisplayValues.Star = this.setStar(this.ItemsSource[i].Resource.AvNt);
@@ -368,6 +372,12 @@ namespace Syracuse.Mobitheque.Core.ViewModels
                     }
                    
                 }
+                }
+                catch (Exception e)
+                {
+                        var tempo = this.ItemsSource[i];
+                        Console.WriteLine(e.Message);
+                }
 
             }
             var result = this.ItemsSource;
@@ -376,6 +386,13 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             if (endIsBusy)
             {
                 this.IsBusy = false;
+            }
+
+            }
+            catch (Exception e)
+            {
+
+                Console.WriteLine(e.Message);
             }
         }
 
@@ -522,25 +539,33 @@ namespace Syracuse.Mobitheque.Core.ViewModels
 
         private async Task PerformSearch(string search = null, string docbase = "SYRACUSE")
         {
-            if (docbase == null || docbase == "")
+            try
             {
-                docbase = "SYRACUSE";
-            }
-            if (search == null)
-            {
-                search = this.Query;
-            } else
-            {
-                this.Query = search;
-            }
-            var options = new SearchLibraryOptionsDetails()
-            {
-                RscId = search,
-                Docbase = docbase,
-            };
-            var res = await this.requestService.SearchLibrary(new SearchLibraryOptions() { Record = options });
+                if (docbase == null || docbase == "")
+                {
+                    docbase = "SYRACUSE";
+                }
+                if (search == null)
+                {
+                    search = this.Query;
+                } else
+                {
+                    this.Query = search;
+                }
+                var options = new SearchLibraryOptionsDetails()
+                {
+                    RscId = search,
+                    Docbase = docbase,
+                };
+                var res = await this.requestService.SearchLibrary(new SearchLibraryOptions() { Record = options });
+                this.Library = res;
 
-            this.Library = res;
+            }
+            catch (Exception e)
+            {
+                this.Library = new SearchLibraryResult();
+                Console.WriteLine(e.Message);
+            }
 
         }
 

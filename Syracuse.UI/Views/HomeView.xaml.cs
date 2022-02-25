@@ -14,9 +14,6 @@ namespace Syracuse.Mobitheque.UI.Views
         public HomeView()
         {
             InitializeComponent();
-
-            this.resultsListEvent.ItemTapped += ResultsList_ItemTapped;
-            this.resultsListDocument.ItemTapped += ResultsList_ItemTapped;
         }
 
         protected override void OnBindingContextChanged()
@@ -25,11 +22,17 @@ namespace Syracuse.Mobitheque.UI.Views
             base.OnBindingContextChanged();
         }
 
-        private async void ResultsList_ItemTapped(object sender, ItemTappedEventArgs e)
+        private async void ResultsList_ItemTapped(object sender, SelectionChangedEventArgs e)
         {
-            var item = e.Item as Result;
-
-            await this.ViewModel.GoToDetailView(item);
+            if (e.CurrentSelection.Count > 0)
+            {
+                var item = e.CurrentSelection[0] as Result;
+                await this.ViewModel.GoToDetailView(item);
+            }
+            else
+            {
+               await this.DisplayAlert("Erreur", "Une erreur est survenue", "Ok");
+            }
         }
 
         private void HomeViewModel_OnDisplayAlert(string title, string message, string button) => this.DisplayAlert(title, message, button);

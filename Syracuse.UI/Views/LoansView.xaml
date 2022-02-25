@@ -101,7 +101,6 @@
                                                                 TextColor="{Binding dateColor}"
                                                                 Text="{Binding WhenBack_String}"
                                                                 FontSize="Small"/>
-
                                                             <StackLayout IsVisible="{Binding CanRenew}">
                                                                 <material:MaterialButton
                                                                   Margin="-5,0,-5,0"
@@ -111,11 +110,8 @@
                                                                   BackgroundColor="{d:DynamicResource AppBackgroundColor}"
                                                                   Text="{x:Static local:AppResource.Extend}"/>
                                                             </StackLayout>
-
                                                         </StackLayout>
-
                                                     </StackLayout>
-
                                                 </Frame>
                                             </ViewCell.View>
                                         </ViewCell>

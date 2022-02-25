@@ -93,17 +93,20 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             opt.IsKm = this.librariesSelected[this.librariesPickerIndex].Config.IsKm;
             opt.BuildingInfos = JsonConvert.SerializeObject(this.librariesSelected[this.librariesPickerIndex].Config.BuildingInformations);
             List<StandartViewList> standartViewList = new List<StandartViewList>();
-            foreach (var item in this.librariesSelected[this.librariesPickerIndex].Config.StandardsViews)
+            if (this.librariesSelected[this.librariesPickerIndex].Config.StandardsViews != null)
             {
-                var tempo = new StandartViewList();
+                foreach (var item in this.librariesSelected[this.librariesPickerIndex].Config.StandardsViews)
+                {
+                    var tempo = new StandartViewList();
 
-                tempo.ViewName = item.ViewName;
-                tempo.ViewIcone = item.ViewIcone;
-                tempo.ViewQuery = item.ViewQuery;
-                tempo.ViewScenarioCode = item.ViewScenarioCode;
-                tempo.Username = "";
-                tempo.Library = opt.Library;
-                standartViewList.Add(tempo);
+                    tempo.ViewName = item.ViewName;
+                    tempo.ViewIcone = item.ViewIcone;
+                    tempo.ViewQuery = item.ViewQuery;
+                    tempo.ViewScenarioCode = item.ViewScenarioCode;
+                    tempo.Username = "";
+                    tempo.Library = opt.Library;
+                    standartViewList.Add(tempo);
+                }
             }
             LoginParameters loginParameters = new LoginParameters(this.librariesSelected[this.LibrariesPickerIndex].Config.ListSSO, opt, standartViewList);
             await this.navigationService.Navigate<LoginViewModel, LoginParameters>(loginParameters);

@@ -196,6 +196,7 @@ namespace Syracuse.Mobitheque.Core.Services.Requests
             this.ResetCookies();
             this.InitializeHttpClient(baseUrl);
 
+
             try
             {
                 var status = await this.requests.Authentication<LoginStatus>(new Dictionary<string, object>() {
@@ -241,6 +242,10 @@ namespace Syracuse.Mobitheque.Core.Services.Requests
             CookiesSave user = await App.Database.GetActiveUser();
             if (user != null)
             {
+                if (user.LibraryUrl.Last() == '/')
+                {
+                    user.LibraryUrl = user.LibraryUrl.Remove(user.LibraryUrl.Length - 1);
+                }
                 this.httpUri = new Uri(user.LibraryUrl);
 
                 await this.UpdateCookies();
@@ -258,6 +263,10 @@ namespace Syracuse.Mobitheque.Core.Services.Requests
 
         public void InitializeHttpClient(string url)
         {
+            if (url.Last() == '/')
+            {
+                url = url.Remove(url.Length - 1);
+            }
             this.httpUri = new Uri(url);
 
             HttpClient httpClient = new HttpClient(this.handler)
@@ -279,7 +288,7 @@ namespace Syracuse.Mobitheque.Core.Services.Requests
             if (baseUrl != null && CookiesArray != null)
             {
                 this.ResetCookies();
-                                this.InitializeHttpClient(baseUrl);
+                this.InitializeHttpClient(baseUrl);
                 this.LoadCookies(CookiesArray);
 
 
@@ -544,9 +553,7 @@ namespace Syracuse.Mobitheque.Core.Services.Requests
             {
                 this.token = this.Timestamp();
                 var status = await this.requests.CancelBooking<CancelBookingResult>(options);
-
                 await UpdateCookies();
-
                 return status;
             }
             catch (Exception ex)
@@ -567,9 +574,7 @@ namespace Syracuse.Mobitheque.Core.Services.Requests
             {
                 this.token = this.Timestamp();
                 var status = await this.requests.PlaceReservation<PlaceReservationResult>(options);
-
                 await UpdateCookies();
-
                 return status;
             }
             catch (Exception ex)
@@ -608,7 +613,6 @@ namespace Syracuse.Mobitheque.Core.Services.Requests
                         {
                             Match barecode = new Regex(regex, RegexOptions.Singleline | RegexOptions.Compiled).Match(match.Value);
                             codebare = barecode.Groups[3].Value;
-
                         }
                     }
                     await UpdateCookies();
@@ -623,6 +627,27 @@ namespace Syracuse.Mobitheque.Core.Services.Requests
             {
                 error?.Invoke(ex);
                 return new InstanceResult<string>();
+            }
+        }
+
+        public async Task<InstanceResult<AgendaResult>> GetEventById(EventByIdOptions options, Action<Exception> error = null)
+        {
+            if (!App.AppState.NetworkConnection)
+            {
+                Debug.WriteLine("NetworkConnection" + App.AppState.NetworkConnection);
+            }
+            await this.InitializeHttpClient();
+            try
+            {
+                this.token = this.Timestamp();
+                var status = await this.requests.GetEventById<InstanceResult<AgendaResult>>(options);
+                await UpdateCookies();
+                return status;
+            }
+            catch (Exception ex)
+            {
+                error?.Invoke(ex);
+                return null;
             }
         }
     }

@@ -57,5 +57,7 @@ namespace Syracuse.Mobitheque.Core.Services.Requests
         Task<CancelBookingResult> CancelBooking(BookingOptions options, Action<Exception> error = null);
 
         Task<InstanceResult<string>> RenderAccountWebFrame(AccountWebFrameOptions options, Action<Exception> error = null);
+
+        Task<InstanceResult<AgendaResult>> GetEventById(EventByIdOptions options, Action<Exception> error = null);
     }
 }

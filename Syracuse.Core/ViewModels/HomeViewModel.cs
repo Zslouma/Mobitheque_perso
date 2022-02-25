@@ -109,6 +109,8 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             }
         }
 
+
+
         private MvxAsyncCommand<SearchResult> openDetailsCommand;
         public MvxAsyncCommand<SearchResult> OpenDetailsCommand => this.openDetailsCommand ??
             (this.openDetailsCommand = new MvxAsyncCommand<SearchResult>((result) => this.OpenResultDetails(result)));
@@ -185,7 +187,6 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             this.SearchScenarioCode = user.SearchScenarioCode;
             
             this.Results = await this.loadPage(user.IsEvent);
-
             if (this.results.Length == 0)
             {
                 this.NotCurrentEvent = true;
@@ -193,23 +194,34 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             else
             {
                 this.NotCurrentEvent = false;
+                foreach (var result in this.Results)
+                {
+                    var tempo = await requestService.GetEventById(new EventByIdOptions(long.Parse(result.Resource.RscId)));
+                    if (tempo.Success && tempo.D.AgendaPlages.Count > 0)
+                    {
+                        foreach (var plage in tempo.D.AgendaPlages)
+                        {
+                            if (plage.AgendaFiles.Count > 0)
+                            {
+                                result.FieldList.IsInscriptionEvent = true;
+                            }
+                        }
+                    }
+                }
             }
             this.IsEvent = user.IsEvent;
-            await this.GetRedirectURL();
             this.IsBusy = false;
             await base.Initialize();
         }
 
         private async Task getNextPage()
         {
-
             this.IsBusy = true;
             await this.RaisePropertyChanged(nameof(IsBusy));
             this.page += 1;
 
             Result[] res = await loadPage(this.IsEvent);
             this.Results = this.Results.Concat(res).ToArray();
-            await this.GetRedirectURL();
             this.IsBusy = false;
             await this.RaisePropertyChanged(nameof(IsBusy));
         }
@@ -221,19 +233,18 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             {
                 options.Query = new SearchOptionsDetails()
                 {
-                    QueryString = "NumberOfDigitalNotices_int_idx:[1 TO *]",
+                    QueryString = "*",
                     ScenarioCode = this.eventsScenarioCode,
                     Page = this.page,
                     SortField = "DateStart_sort",
                     SortOrder = 1,
-
                 };
             }
             else
             {
                 options.Query = new SearchOptionsDetails()
                 {
-                    QueryString = "NumberOfDigitalNotices_int_idx:[1 TO *]",
+                    QueryString = "*",
                     ScenarioCode = this.eventsScenarioCode,
                     Page = this.page,
                 };
@@ -254,7 +265,6 @@ namespace Syracuse.Mobitheque.Core.ViewModels
                         search.D.Results = await this.CheckAvCheckAvailability(search.D.Results);
                     }
                 }
-
             }
             return search?.D?.Results;
         }
@@ -340,8 +350,6 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             if (this.Results == null)
                 return;
             this.filterIndex = filter.Index;
-
-            
         }
 
         private async Task OpenResultDetails(SearchResult result)
@@ -379,7 +387,6 @@ namespace Syracuse.Mobitheque.Core.ViewModels
                 {
                     Debug.Write("Invalid object. ");
                 }
-
             }
             await this.RaiseAllPropertiesChanged();
         }

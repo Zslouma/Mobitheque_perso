@@ -179,6 +179,7 @@ namespace Syracuse.Mobitheque.Core.Models
     public partial class FieldList
     {
         public string[] Title { get; set; }
+        public bool IsInscriptionEvent { get; set; } = false;
         public string[] TypeOfDocument_exact { get; set; }
         public string[] Author { get; set; }
 
@@ -336,6 +337,8 @@ namespace Syracuse.Mobitheque.Core.Models
         public string[] DateStart_idx { get; set; }
         [JsonProperty("DateEnd_idx")]
         public string[] DateEnd_idx { get; set; }
+        [JsonProperty("DateDisplay")]
+        public string[] DateDisplay { get; set; }
         public string DateTime_String
         { get
             {

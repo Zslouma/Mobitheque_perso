@@ -60,5 +60,8 @@ namespace Syracuse.Mobitheque.Core.Services.Requests
 
         [Post("/Portal/Search.svc/RenderAccountWebFrame")]
         Task<T> RenderAccountWebFrame<T>([Body] AccountWebFrameOptions body);
+
+        [Post("/Portal/Services/Agenda.svc/GetEventById")]
+        Task<T> GetEventById<T>([Body] EventByIdOptions body);
     }
 }
