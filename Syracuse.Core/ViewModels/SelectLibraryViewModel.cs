@@ -61,8 +61,8 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             }
         }
 
-        private IMvxAsyncCommand validateCommand;
-        public IMvxAsyncCommand ValidateCommand
+
+        public async Task ValidateHandler( string url)
         {
             get
             {
@@ -80,42 +80,16 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             }
             CookiesSave opt = new CookiesSave();
 
-            opt.Department = this.DepartmentsPickerSource[this.departmentsPickerIndex];
-            opt.Library = this.librariesPickerSource[this.LibrariesPickerIndex];
-            opt.LibraryCode = this.librariesSelected[this.librariesPickerIndex].Code;
-            opt.LibraryUrl = this.librariesSelected[this.librariesPickerIndex].Config.BaseUri;
-            opt.DomainUrl = this.librariesSelected[this.librariesPickerIndex].Config.DomainUri;
-            opt.ForgetMdpUrl = this.librariesSelected[this.librariesPickerIndex].Config.ForgetMdpUri;
-            opt.EventsScenarioCode = this.librariesSelected[this.librariesPickerIndex].Config.EventsScenarioCode;
-            opt.SearchScenarioCode = this.librariesSelected[this.librariesPickerIndex].Config.SearchScenarioCode;
-            opt.IsEvent = this.librariesSelected[this.librariesPickerIndex].Config.IsEvent;
-            opt.RememberMe = this.librariesSelected[this.librariesPickerIndex].Config.RememberMe;
-            opt.IsKm = this.librariesSelected[this.librariesPickerIndex].Config.IsKm;
-            opt.BuildingInfos = JsonConvert.SerializeObject(this.librariesSelected[this.librariesPickerIndex].Config.BuildingInformations);
-            List<StandartViewList> standartViewList = new List<StandartViewList>();
-            if (this.librariesSelected[this.librariesPickerIndex].Config.StandardsViews != null)
-            {
-                foreach (var item in this.librariesSelected[this.librariesPickerIndex].Config.StandardsViews)
-                {
-                    var tempo = new StandartViewList();
-
-                    tempo.ViewName = item.ViewName;
-                    tempo.ViewIcone = item.ViewIcone;
-                    tempo.ViewQuery = item.ViewQuery;
-                    tempo.ViewScenarioCode = item.ViewScenarioCode;
-                    tempo.Username = "";
-                    tempo.Library = opt.Library;
-                    standartViewList.Add(tempo);
+                    this.IsLoading = false;
+                    LoginParameters loginParameters = new LoginParameters(this.Librarie.Config.ListSSO, opt);
+                    await this.navigationService.Navigate<LoginViewModel, LoginParameters>(loginParameters);
                 }
-            }
-            LoginParameters loginParameters = new LoginParameters(this.librariesSelected[this.LibrariesPickerIndex].Config.ListSSO, opt, standartViewList);
-            await this.navigationService.Navigate<LoginViewModel, LoginParameters>(loginParameters);
-        }
-
-        private async Task ChangeLibraries()
-        {
-            Library[] libraries = await this.departmentService.GetLibraries();
-            Department[] departments = await this.departmentService.GetDepartments();
+                catch (Exception ex)
+                {
+                    this.IsLoading = false;
+                    this.DisplayAlert("Erreur", "Une erreur est survenue lors de la recupération des données de votre établisment", "OK");
+                    this.CanSubmit = false;
+                }
 
             if (departments == null)
             {
@@ -125,8 +99,9 @@ namespace Syracuse.Mobitheque.Core.ViewModels
 
             if (libraries == null)
             {
-                Exception exception1 = new Exception("Unable to find departments.");
-                throw exception1;
+                this.IsLoading = false;
+                this.DisplayAlert("Erreur", "Veuillez selectionner un QRcode ou une url valide", "OK");
+                this.CanSubmit = false;
             }
 
             Library[] library = Array.FindAll(libraries,

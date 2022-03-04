@@ -25,6 +25,53 @@ namespace Syracuse.Mobitheque.UI.Views
             (this.DataContext as SelectLibraryViewModel).OnDisplayAlert += SelectLibrary_OnDisplayAlert;
             base.OnBindingContextChanged();
         }
+        public async void InvokeCompleted(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(txtBarcode.Text) && !this.isnetworkError)
+            {
+                this.ViewModel.CanSubmit = true;
+            }
+            else
+            {
+                this.ViewModel.CanSubmit = false;
+            }
+        }
+        private async void btnScan_Clicked(object sender, EventArgs e)
+        {
+            this.ViewModel.IsLoading = true;
+            try
+            {
+                var options = new MobileBarcodeScanningOptions
+                {
+                    AutoRotate = false,
+                    UseFrontCameraIfAvailable = false,
+                    TryHarder = true
+                };
+
+                var overlay = new ZXingDefaultOverlay
+                {
+                    TopText = "Please scan QR code",
+                    BottomText = "Align the QR code within the frame"
+                };
+
+                var QRScanner = new ZXingScannerPage(options, overlay);
+
+                await Navigation.PushModalAsync(QRScanner);
+
+                QRScanner.OnScanResult += (result) =>
+                {
+                    // Stop scanning
+                    QRScanner.IsScanning = false;
+
+                    // Pop the page and show the result
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        Navigation.PopModalAsync(true);
+                        txtBarcode.Text = result.Text;
+                        this.ViewModel.CanSubmit = true;
+                        this.ViewModel.ValidateHandler(txtBarcode.Text);
+
+                    });
 
 
         protected override void OnAppearing()
