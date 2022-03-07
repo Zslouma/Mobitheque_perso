@@ -115,7 +115,7 @@
                             VerticalScrollBarVisibility="Never">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <ViewCell>
+                                <StackLayout>
                                     <StackLayout Orientation="Horizontal" Padding="7, 0, 7, 0" Margin="0,0,0,15">
                                         <Frame VerticalOptions="FillAndExpand" Margin="5" Padding="0" >
                                             <Frame.HasShadow>
@@ -124,7 +124,7 @@
                                                     <On Platform="Android">true</On>
                                                 </OnPlatform>
                                             </Frame.HasShadow>
-                                            <Image VerticalOptions="Center" Source="{Binding FieldList.Image}" HeightRequest="120" WidthRequest="90" BackgroundColor="Transparent"/>
+                                            <ffimageloading:CachedImage VerticalOptions="Center" HorizontalOptions="Fill" ErrorPlaceholder="image_not_found.jpg"  Aspect="AspectFill" Source="{Binding FieldList.Image}" HeightRequest="120" WidthRequest="90" BackgroundColor="Transparent" />
                                         </Frame>
                                         <StackLayout VerticalOptions="Center" Orientation="Vertical">
                                             <Label TextColor="Black" Text="{Binding FieldList.Title[0]}" MaxLines="2" FontAttributes="Bold" FontSize="Medium"/>
@@ -135,7 +135,7 @@
                                             </StackLayout>
                                         </StackLayout>
                                     </StackLayout>
-                                </ViewCell>
+                                </StackLayout>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                         <CollectionView.Footer>

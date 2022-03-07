@@ -1,9 +1,12 @@
 ﻿using MvvmCross.Forms.Presenters.Attributes;
 using MvvmCross.Forms.Views;
+using Syracuse.Mobitheque.Core;
 using Syracuse.Mobitheque.Core.ViewModels;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using ZXing.Mobile;
@@ -23,6 +26,7 @@ namespace Syracuse.Mobitheque.UI.Views
         {
             InitializeComponent();
         }
+
         public async void InvokeCompleted(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(txtBarcode.Text) && !this.isnetworkError)
@@ -34,61 +38,7 @@ namespace Syracuse.Mobitheque.UI.Views
                 this.ViewModel.CanSubmit = false;
             }
         }
-        private async void btnScan_Clicked(object sender, EventArgs e)
-        {
-            this.ViewModel.IsLoading = true;
-            try
-            {
-                var options = new MobileBarcodeScanningOptions
-                {
-                    AutoRotate = false,
-                    UseFrontCameraIfAvailable = false,
-                    TryHarder = true
-                };
 
-                var overlay = new ZXingDefaultOverlay
-                {
-                    TopText = "Please scan QR code",
-                    BottomText = "Align the QR code within the frame"
-                };
-
-                var QRScanner = new ZXingScannerPage(options, overlay);
-
-                await Navigation.PushModalAsync(QRScanner);
-
-                QRScanner.OnScanResult += (result) =>
-                {
-                    // Stop scanning
-                    QRScanner.IsScanning = false;
-
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-            Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
-            Connectivity_test();
-        }
-        protected override void OnDisappearing()
-        {
-            base.OnDisappearing();
-            Connectivity.ConnectivityChanged -= Connectivity_ConnectivityChanged;
-        }
-
-        protected override void OnBindingContextChanged()
-        {
-            (this.DataContext as SelectLibraryViewModel).OnDisplayAlert += SelectLibrary_OnDisplayAlert;
-            base.OnBindingContextChanged();
-        }
-        public async void InvokeCompleted(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(txtBarcode.Text) && !this.isnetworkError)
-            {
-                this.ViewModel.CanSubmit = true;
-            }
-            else
-            {
-                this.ViewModel.CanSubmit = false;
-            }
-        }
         private async void btnScan_Clicked(object sender, EventArgs e)
         {
             this.ViewModel.IsLoading = true;
@@ -122,6 +72,8 @@ namespace Syracuse.Mobitheque.UI.Views
                         Navigation.PopModalAsync(true);
                         txtBarcode.Text = result.Text;
                         this.ViewModel.CanSubmit = true;
+                        this.ViewModel.ValidateHandler(txtBarcode.Text);
+
                     });
 
                 };
@@ -133,6 +85,24 @@ namespace Syracuse.Mobitheque.UI.Views
                 DisplayAlert("ERROR", ex.Message, "OK");
             }
             this.ViewModel.IsLoading = false;
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
+            Connectivity_test();
+        }
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            Connectivity.ConnectivityChanged -= Connectivity_ConnectivityChanged;
+        }
+
+        protected override void OnBindingContextChanged()
+        {
+            (this.DataContext as SelectLibraryViewModel).OnDisplayAlert += SelectLibrary_OnDisplayAlert;
+            base.OnBindingContextChanged();
         }
 
         public async Task Connectivity_test()

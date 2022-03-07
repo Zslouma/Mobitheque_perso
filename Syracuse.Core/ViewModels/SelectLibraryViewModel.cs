@@ -68,7 +68,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
         }
 
 
-        private async Task ValidateHandler( string url)
+        public async Task ValidateHandler( string url)
         {
             this.IsLoading = true;
 
@@ -93,15 +93,23 @@ namespace Syracuse.Mobitheque.Core.ViewModels
                     opt.IsEvent = this.Librarie.Config.IsEvent;
                     opt.RememberMe = this.Librarie.Config.RememberMe;
                     opt.IsKm = this.Librarie.Config.IsKm;
-                    opt.CanDownload = this.Librarie.Config.CanDownload;
-                    opt.DailyPressQuery = this.Librarie.Config.DailyPress.Query;
-                    opt.DailyPressScenarioCode = this.Librarie.Config.DailyPress.PressScenarioCode;
-                    opt.InternationalPressQuery = this.Librarie.Config.InternationalPress.Query;
-                    opt.InternationalPressScenarioCode = this.Librarie.Config.InternationalPress.PressScenarioCode;
                     opt.BuildingInfos = JsonConvert.SerializeObject(this.Librarie.Config.BuildingInformations);
 
                     this.IsLoading = false;
-                    LoginParameters loginParameters = new LoginParameters(this.Librarie.Config.ListSSO, opt);
+                    List<StandartViewList> standartViewList = new List<StandartViewList>();
+                    foreach (var item in this.Librarie.Config.StandardsViews)
+                    {
+                        var tempo = new StandartViewList();
+
+                        tempo.ViewName = item.ViewName;
+                        tempo.ViewIcone = item.ViewIcone;
+                        tempo.ViewQuery = item.ViewQuery;
+                        tempo.ViewScenarioCode = item.ViewScenarioCode;
+                        tempo.Username = "";
+                        tempo.Library = opt.Library;
+                        standartViewList.Add(tempo);
+                    }
+                    LoginParameters loginParameters = new LoginParameters(this.Librarie.Config.ListSSO, opt, standartViewList);
                     await this.navigationService.Navigate<LoginViewModel, LoginParameters>(loginParameters);
                 }
                 catch (Exception ex)
