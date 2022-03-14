@@ -6,6 +6,7 @@ using Syracuse.Mobitheque.Core.ViewModels.Sorts;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -310,6 +311,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
         #endregion
 
         async public override void Prepare(SearchOptions parameter) {
+            Debug.WriteLine("SearchViewModel start Prepare");
             this.options = parameter;
             CookiesSave b = await App.Database.GetActiveUser();
             if (b.SearchValue != null)
@@ -322,7 +324,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
                 this.SearchQuery = parameter.Query.QueryString;
                 PerformSearch(parameter.Query.QueryString);
             }
-
+            Debug.WriteLine("SearchViewModel end Prepare");
         }
 
         #region Command
@@ -498,6 +500,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
         }
         private async Task<Result[]> loadPage()
         {
+            Debug.WriteLine("SearchViewModel start loadPage");
             SearchOptions optionsTempo = new SearchOptions();
 
             optionsTempo.Query = new SearchOptionsDetails()
@@ -519,6 +522,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             {
                 search.D.Results = await this.CheckAvCheckAvailability(search.D.Results, this.SearchQuery);
             }
+            Debug.WriteLine("SearchViewModel end loadPage");
             return search?.D?.Results;
         }
 

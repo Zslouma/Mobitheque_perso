@@ -64,8 +64,8 @@
                                                                 <Grid.ColumnDefinitions>
                                                                     <ColumnDefinition Width="90"/>
                                                                 </Grid.ColumnDefinitions>
-                                                                <ffimageloading:CachedImage Grid.Row="0" Grid.Column="0" x:Name="image" Source="{Binding FieldList.Image}" ErrorPlaceholder="image_not_found.jpg" Aspect="AspectFill" DownsampleToViewSize="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" HeightRequest="120"  WidthRequest="90"/>
-                                                                <AbsoluteLayout Grid.Row="0" Grid.Column="0" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                                                                    <ffimageloading:CachedImage x:Name="image" Grid.Row="0" Grid.Column="0"  Source="{Binding FieldList.Image}" ErrorPlaceholder="image_not_found.jpg" Aspect="AspectFill" DownsampleToViewSize="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" HeightRequest="120"  WidthRequest="90"/>
+                                                                <!--<AbsoluteLayout Grid.Row="0" Grid.Column="0" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                                                                     <ActivityIndicator  Color="Gray"  AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds=".5,.5,-1,-1">
                                                                         <ActivityIndicator.Triggers >
                                                                             <DataTrigger TargetType="ActivityIndicator" Binding="{Binding Source={x:Reference image}, Path=IsLoading}" Value="True">
@@ -79,7 +79,7 @@
                                                                             </DataTrigger>
                                                                         </ActivityIndicator.Triggers>
                                                                     </ActivityIndicator>
-                                                                </AbsoluteLayout>
+                                                                </AbsoluteLayout>-->
                                                             </Grid>
 
                                                         </Frame>
