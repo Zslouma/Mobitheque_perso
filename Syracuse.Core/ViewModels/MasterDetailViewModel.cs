@@ -45,7 +45,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             CookiesSave user = await App.Database.GetActiveUser();
             if (user != null)
             {
-                Library Alllibraries = await this.departmentService.GetLibraries("",true);
+                Library Alllibraries = await this.departmentService.GetLibraries(user.LibraryJsonUrl,true);
                 if (!(Alllibraries is null))
                 {
                     try
