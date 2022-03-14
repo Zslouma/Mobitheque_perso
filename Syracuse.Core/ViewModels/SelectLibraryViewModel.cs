@@ -94,6 +94,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
                     opt.RememberMe = this.Librarie.Config.RememberMe;
                     opt.IsKm = this.Librarie.Config.IsKm;
                     opt.BuildingInfos = JsonConvert.SerializeObject(this.Librarie.Config.BuildingInformations);
+                    opt.LibraryJsonUrl = url;
 
                     this.IsLoading = false;
                     List<StandartViewList> standartViewList = new List<StandartViewList>();

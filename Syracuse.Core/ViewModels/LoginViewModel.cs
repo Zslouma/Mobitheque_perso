@@ -156,21 +156,10 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             {
                 b = new CookiesSave();
             }
+            b = department;
             b.Username = this.username;
             b.Active = true;
             b.Cookies = JsonConvert.SerializeObject(this.requestService.GetCookies().ToArray());
-            b.Library = department.Library;
-            b.LibraryCode = department.LibraryCode;
-            b.LibraryUrl = department.LibraryUrl;
-            b.DomainUrl = department.DomainUrl;
-            b.ForgetMdpUrl = department.ForgetMdpUrl;
-            b.Department = department.Department;
-            b.SearchScenarioCode = department.SearchScenarioCode;
-            b.EventsScenarioCode = department.EventsScenarioCode;
-            b.IsEvent = department.IsEvent;
-            b.RememberMe = department.RememberMe;
-            b.IsKm = department.IsKm;
-            b.BuildingInfos = department.BuildingInfos;
             await App.Database.SaveItemAsync(b);
             foreach (var item in this.departmentStandarViewList)
             {

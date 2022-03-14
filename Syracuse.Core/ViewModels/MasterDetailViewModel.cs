@@ -46,43 +46,46 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             if (user != null)
             {
                 Library Alllibraries = await this.departmentService.GetLibraries("",true);
-                try
+                if (!(Alllibraries is null))
                 {
-                    Library library = Alllibraries;
-                    user.LibraryUrl = library.Config.BaseUri;
-                    user.DomainUrl = library.Config.DomainUri;
-                    user.EventsScenarioCode = library.Config.EventsScenarioCode;
-                    user.SearchScenarioCode = library.Config.SearchScenarioCode;
-                    user.IsEvent = library.Config.IsEvent;
-                    user.IsKm = library.Config.IsKm;
-                    user.BuildingInfos = JsonConvert.SerializeObject(library.Config.BuildingInformations);
-                    await App.Database.SaveItemAsync(user);
-                    List<StandartViewList> standartViewList = new List<StandartViewList>();
-                    foreach (var item in library.Config.StandardsViews)
+                    try
                     {
-                        var tempo = new StandartViewList();
+                        Library library = Alllibraries;
+                        user.LibraryUrl = library.Config.BaseUri;
+                        user.DomainUrl = library.Config.DomainUri;
+                        user.EventsScenarioCode = library.Config.EventsScenarioCode;
+                        user.SearchScenarioCode = library.Config.SearchScenarioCode;
+                        user.IsEvent = library.Config.IsEvent;
+                        user.IsKm = library.Config.IsKm;
+                        user.BuildingInfos = JsonConvert.SerializeObject(library.Config.BuildingInformations);
+                        await App.Database.SaveItemAsync(user);
+                        List<StandartViewList> standartViewList = new List<StandartViewList>();
+                        foreach (var item in library.Config.StandardsViews)
+                        {
+                            var tempo = new StandartViewList();
 
-                        tempo.ViewName = item.ViewName;
-                        tempo.ViewIcone = item.ViewIcone;
-                        Console.WriteLine("ViewIcone :" + item.ViewIcone);
-                        tempo.ViewQuery = item.ViewQuery;
-                        tempo.ViewScenarioCode = item.ViewScenarioCode;
-                        tempo.Username = user.Username;
-                        tempo.Library = library.Name;
-                        standartViewList.Add(tempo);
+                            tempo.ViewName = item.ViewName;
+                            tempo.ViewIcone = item.ViewIcone;
+                            Console.WriteLine("ViewIcone :" + item.ViewIcone);
+                            tempo.ViewQuery = item.ViewQuery;
+                            tempo.ViewScenarioCode = item.ViewScenarioCode;
+                            tempo.Username = user.Username;
+                            tempo.Library = library.Name;
+                            standartViewList.Add(tempo);
+                        }
+                        List<StandartViewList> removeStandardList = await App.Database.GetActiveStandartView(user);
+                        foreach (var removeItem in removeStandardList)
+                        {
+                            await App.Database.DeleteItemAsync(removeItem);
+                        }
+                        await App.Database.SaveItemAsync(standartViewList);
                     }
-                    List<StandartViewList> removeStandardList = await App.Database.GetActiveStandartView(user);
-                    foreach (var removeItem in removeStandardList)
+                    catch (Exception e)
                     {
-                        await App.Database.DeleteItemAsync(removeItem);
+                        Console.WriteLine(e.ToString());
                     }
-                    await App.Database.SaveItemAsync(standartViewList);
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.ToString());
-                }
-                
+
             }
            
         }
