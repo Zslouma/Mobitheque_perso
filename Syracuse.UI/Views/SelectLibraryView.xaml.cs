@@ -27,6 +27,24 @@ namespace Syracuse.Mobitheque.UI.Views
             InitializeComponent();
         }
 
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
+            Connectivity_test();
+        }
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            Connectivity.ConnectivityChanged -= Connectivity_ConnectivityChanged;
+        }
+
+        protected override void OnBindingContextChanged()
+        {
+            (this.DataContext as SelectLibraryViewModel).OnDisplayAlert += SelectLibrary_OnDisplayAlert;
+            base.OnBindingContextChanged();
+        }
+
         public async void InvokeCompleted(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(txtBarcode.Text) && !this.isnetworkError)
@@ -85,24 +103,6 @@ namespace Syracuse.Mobitheque.UI.Views
                 DisplayAlert("ERROR", ex.Message, "OK");
             }
             this.ViewModel.IsLoading = false;
-        }
-
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-            Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
-            Connectivity_test();
-        }
-        protected override void OnDisappearing()
-        {
-            base.OnDisappearing();
-            Connectivity.ConnectivityChanged -= Connectivity_ConnectivityChanged;
-        }
-
-        protected override void OnBindingContextChanged()
-        {
-            (this.DataContext as SelectLibraryViewModel).OnDisplayAlert += SelectLibrary_OnDisplayAlert;
-            base.OnBindingContextChanged();
         }
 
         public async Task Connectivity_test()
