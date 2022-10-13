@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace Syracuse.Mobitheque.Core.Models
@@ -46,9 +47,18 @@ namespace Syracuse.Mobitheque.Core.Models
         public int demandId { get; set; }
         [JsonProperty("id")]
         public int id { get; set; }
-        [JsonProperty("message")]
+        [JsonProperty("message", NullValueHandling = NullValueHandling.Ignore)]
         public string message { get; set; }
-        public string MessagesDisplay { get { return "<p>" + message + "</p>"; } }
+        public string MessagesDisplay
+        {
+            get
+            {
+                message = message.Replace("&lt;", "<");
+                message = message.Replace("&gt;", ">");
+                return message;
+            }
+        }
+
         [JsonProperty("validated")]
         public bool validated { get; set; }
         [JsonProperty("whenCreated")]
@@ -75,17 +85,17 @@ namespace Syracuse.Mobitheque.Core.Models
         public string code { get; set; }
         [JsonProperty("id")]
         public int id { get; set; }
-         [JsonProperty("label")]
+        [JsonProperty("label")]
         public string label { get; set; }
-         [JsonProperty("usage")]
+        [JsonProperty("usage")]
         public int usage { get; set; }
-         [JsonProperty("whenCreated")]
+        [JsonProperty("whenCreated")]
         public DateTime whenCreated { get; set; }
-         [JsonProperty("whenUpdated")]
+        [JsonProperty("whenUpdated")]
         public object whenUpdated { get; set; }
-         [JsonProperty("whoCreatedId")]
+        [JsonProperty("whoCreatedId")]
         public object whoCreatedId { get; set; }
-         [JsonProperty("whoUpdatedId")]
+        [JsonProperty("whoUpdatedId")]
         public object whoUpdatedId { get; set; }
     }
 
@@ -104,7 +114,7 @@ namespace Syracuse.Mobitheque.Core.Models
         [JsonProperty("applicationDescription")]
         public string applicationDescription { get; set; }
         [JsonProperty("applicationId")]
-        public int applicationId { get; set; }
+        public int? applicationId { get; set; }
         [JsonProperty("applicationName")]
         public string applicationName { get; set; }
         [JsonProperty("scopeDescription")]
@@ -113,95 +123,95 @@ namespace Syracuse.Mobitheque.Core.Models
         public object scopeId { get; set; }
         [JsonProperty("scopeName")]
         public string scopeName { get; set; }
-         [JsonProperty("applicant")]
+        [JsonProperty("applicant")]
         public Applicant applicant { get; set; }
-         [JsonProperty("applicantId")]
+        [JsonProperty("applicantId")]
         public int applicantId { get; set; }
-         [JsonProperty("attachments")]
+        [JsonProperty("attachments")]
         public object attachments { get; set; }
-         [JsonProperty("barcode")]
+        [JsonProperty("barcode")]
         public string barcode { get; set; }
-         [JsonProperty("canDelete")]
+        [JsonProperty("canDelete")]
         public bool canDelete { get; set; }
-         [JsonProperty("canEdit")]
+        [JsonProperty("canEdit")]
         public bool canEdit { get; set; }
-         [JsonProperty("canRead")]
+        [JsonProperty("canRead")]
         public bool canRead { get; set; }
-         [JsonProperty("civility")]
+        [JsonProperty("civility")]
         public string civility { get; set; }
-         [JsonProperty("demandChannel")]
+        [JsonProperty("demandChannel")]
         public DemandChannel demandChannel { get; set; }
-         [JsonProperty("demandChannelId")]
+        [JsonProperty("demandChannelId")]
         public int demandChannelId { get; set; }
-         [JsonProperty("email")]
+        [JsonProperty("email")]
         public string email { get; set; }
-         [JsonProperty("firstname")]
+        [JsonProperty("firstname")]
         public string firstname { get; set; }
-         [JsonProperty("formData")]
+        [JsonProperty("formData")]
         public object formData { get; set; }
         [JsonProperty("keywords")]
         public string keywords { get; set; }
-         [JsonProperty("lockResult")]
+        [JsonProperty("lockResult")]
         public object lockResult { get; set; }
-         [JsonProperty("messages")]
+        [JsonProperty("messages")]
         public List<Message> messages { get; set; }
-         [JsonProperty("note")]
+        [JsonProperty("note")]
         public string note { get; set; }
-         [JsonProperty("owner")]
+        [JsonProperty("owner")]
         public Owner owner { get; set; }
-         [JsonProperty("ownerId")]
+        [JsonProperty("ownerId")]
         public int? ownerId { get; set; }
-         [JsonProperty("phone")]
+        [JsonProperty("phone")]
         public string phone { get; set; }
-         [JsonProperty("read")]
+        [JsonProperty("read")]
         public bool read { get; set; }
-         [JsonProperty("reason")]
+        [JsonProperty("reason")]
         public string reason { get; set; }
         [JsonProperty("responseChannel")]
         public ResponseChannel responseChannel { get; set; }
-         [JsonProperty("responseChannelId")]
+        [JsonProperty("responseChannelId")]
         public int responseChannelId { get; set; }
-         [JsonProperty("status")]
+        [JsonProperty("status")]
         public int status { get; set; }
-         [JsonProperty("surname")]
+        [JsonProperty("surname")]
         public string surname { get; set; }
-         [JsonProperty("whenClosed")]
+        [JsonProperty("whenClosed")]
         public DateTime? whenClosed { get; set; }
-         [JsonProperty("DocumentId")]
+        [JsonProperty("DocumentId")]
         public string DocumentId { get; set; }
-         [JsonProperty("applicantUserDisplayName")]
+        [JsonProperty("applicantUserDisplayName")]
         public string applicantUserDisplayName { get; set; }
-         [JsonProperty("applicantUserId")]
+        [JsonProperty("applicantUserId")]
         public int applicantUserId { get; set; }
-         [JsonProperty("demandChannelName")]
+        [JsonProperty("demandChannelName")]
         public string demandChannelName { get; set; }
-         [JsonProperty("duration")]
+        [JsonProperty("duration")]
         public int? duration { get; set; }
-         [JsonProperty("lastMessage")]
+        [JsonProperty("lastMessage")]
         public string lastMessage { get; set; }
-         [JsonProperty("messagesText")]
+        [JsonProperty("messagesText")]
         public string messagesText { get; set; }
-         [JsonProperty("ownerUserDisplayName")]
+        [JsonProperty("ownerUserDisplayName")]
         public string ownerUserDisplayName { get; set; }
-         [JsonProperty("ownerUserId")]
+        [JsonProperty("ownerUserId")]
         public int? ownerUserId { get; set; }
-         [JsonProperty("ownerUserUid")]
+        [JsonProperty("ownerUserUid")]
         public string ownerUserUid { get; set; }
-         [JsonProperty("reasonLabel")]
+        [JsonProperty("reasonLabel")]
         public string reasonLabel { get; set; }
-         [JsonProperty("responseChannelName")]
+        [JsonProperty("responseChannelName")]
         public string responseChannelName { get; set; }
-         [JsonProperty("sourceMessage")]
+        [JsonProperty("sourceMessage")]
         public string sourceMessage { get; set; }
-         [JsonProperty("statusLabel")]
+        [JsonProperty("statusLabel")]
         public string statusLabel { get; set; }
-         [JsonProperty("whoCreatedUserDisplayName")]
+        [JsonProperty("whoCreatedUserDisplayName")]
         public string whoCreatedUserDisplayName { get; set; }
-         [JsonProperty("whoCreatedUserId")]
+        [JsonProperty("whoCreatedUserId")]
         public int whoCreatedUserId { get; set; }
-         [JsonProperty("whoUpdatedUserDisplayName")]
+        [JsonProperty("whoUpdatedUserDisplayName")]
         public string whoUpdatedUserDisplayName { get; set; }
-         [JsonProperty("whoUpdatedUserId")]
+        [JsonProperty("whoUpdatedUserId")]
         public int? whoUpdatedUserId { get; set; }
         public string StateIcon
         {
@@ -219,5 +229,37 @@ namespace Syracuse.Mobitheque.Core.Models
                 }
             }
         }
+    }
+
+    public enum UserDemandStatus
+    {
+        /// <summary>
+        /// A traiter.
+        /// </summary>
+        [EnumMember]
+        Pending = 0,
+        /// <summary>
+        /// En cours.
+        /// </summary>
+        [EnumMember]
+        Working = 1,
+        /// <summary>
+        /// Traitée.
+        /// </summary>
+        [EnumMember]
+        Closed = 2,
+        /// <summary>
+        /// Archivée.
+        /// </summary>
+        [EnumMember]
+        Archived = 3
+    }
+
+    public class RequestAddMessageToDemands
+    {
+        public List<object> errors { get; set; }
+        public string message { get; set; }
+        public bool success { get; set; }
+
     }
 }

@@ -51,6 +51,8 @@ namespace Syracuse.Mobitheque.Core.Services.Requests
         Task<SearchLibraryResult> SearchLibrary(SearchLibraryOptions options, Action<Exception> error = null);
 
         Task<PlaceReservationResult> PlaceReservation(PlaceReservationOptions options, Action<Exception> error = null);
+        Task<InstanceResult<UserDemands>> SetMessageAsValidated(int messageId, Action<Exception> error = null);
+
 
         Task<RenewLoanResult> RenewLoans(LoanOptions options, Action<Exception> error = null);
 

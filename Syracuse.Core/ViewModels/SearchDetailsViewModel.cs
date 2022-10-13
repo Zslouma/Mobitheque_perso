@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Syracuse.Mobitheque.Core.ViewModels
@@ -30,6 +31,12 @@ namespace Syracuse.Mobitheque.Core.ViewModels
         {
             get => this.star;
             set { SetProperty(ref this.star, value); }
+        }
+        private string linkdesc;
+        public string Linkdesc
+        {
+            get => this.linkdesc;
+            set { SetProperty(ref this.linkdesc, value); }
         }
 
         public string AuthorDate
@@ -157,6 +164,14 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             }
         }
 
+        public string GetLink(string message)
+        {
+            string link = "";
+            Regex urlRx = new Regex(@"((https?|ftp|file)\://|www.)[A-Za-z0-9\.\-]+(/[A-Za-z0-9\?\&\=;\+!'\(\)\*\-\._~%]*)*", RegexOptions.IgnoreCase);
+            MatchCollection matches = urlRx.Matches(message);
+            link = matches[0].Value;
+            return link;
+        }
 
         private bool reversIsKm = false;
         public bool ReversIsKm
@@ -211,6 +226,8 @@ namespace Syracuse.Mobitheque.Core.ViewModels
                 this.EndDataPosition = tempo + 10 < parameterTempo[1].D.Results.Length ? tempo + 10 : parameterTempo[1].D.Results.Length - 1;
                 await this.FormateToCarrousel(this.StartDataPosition, this.EndDataPosition, false);
                 this.CurrentItem = this.ItemsSource[tempo];
+                this.Linkdesc = GetLink(this.CurrentItem.Resource.Desc);
+                Console.WriteLine(this.Linkdesc);
                 this.Position = tempo;
                 this.IsPositionVisible = true;
                 if (tempo >= (this.ItemsSource.Count() - 5) && int.Parse(this.NbrResults) > this.ItemsSource.Count)
