@@ -60,10 +60,17 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             this.navigationService = navigationService;
             this.requestService = requestService;
         }
-
         public async override Task Initialize()
         {
             await base.Initialize();
+        }
+        public async override void ViewAppeared()
+        {
+            await this.Update();
+            base.ViewAppeared();
+        }
+        public async Task Update()
+        {
             this.IsBusy = true;
             var result = await this.requestService.GetUserDemands();
             if (result.Success)
@@ -72,10 +79,14 @@ namespace Syracuse.Mobitheque.Core.ViewModels
                 foreach (var item in result.D)
                 {
                     this.Demands.Add(item);
+                    this.HasDemands = true;
                 }
             }
+            await this.RaiseAllPropertiesChanged();
             this.IsBusy = false;
         }
+
+
 
         public void HeaderTapped(UserDemands facetteGroupSelected)
         {

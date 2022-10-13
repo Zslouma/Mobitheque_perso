@@ -27,8 +27,8 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <Label Grid.Row="0" Grid.Column="0" VerticalTextAlignment="Center" HorizontalTextAlignment="Start" Text="{Binding Library}" FontAttributes="Bold" FontSize="Large" TextColor="{d:DynamicResource DarkTextColor}"/>
-                        <Label Grid.Row="0" Grid.Column="1" VerticalTextAlignment="Center" HorizontalTextAlignment="End" Text="{x:Static local:AppResource.News }" TextColor="{d:DynamicResource PurpleTextColor}" IsVisible="{Binding NotCurrentEventReverse}"/>
+                        <Label Grid.Row="0" Grid.Column="0" VerticalTextAlignment="Start" HorizontalTextAlignment="Center" Text="{Binding Library}" FontAttributes="Bold" FontSize="Large" TextColor="{d:DynamicResource DarkTextColor}"/>
+                        <Label Grid.Row="0" Grid.Column="1" VerticalTextAlignment="Start" HorizontalTextAlignment="Center" Text="{x:Static local:AppResource.News }" TextColor="{d:DynamicResource PurpleTextColor}" IsVisible="{Binding NotCurrentEventReverse}"/>
                     </Grid>
                     <Label Margin="10" HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Text="{x:Static local:AppResource.NotCurrentEvent}" IsVisible="{Binding NotCurrentEvent}" />
                     <CollectionView

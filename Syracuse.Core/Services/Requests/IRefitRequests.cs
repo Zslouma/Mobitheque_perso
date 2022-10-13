@@ -46,6 +46,11 @@ namespace Syracuse.Mobitheque.Core.Services.Requests
         [Post("/Portal/Services/ILSClient.svc/CheckAvailability")]
         Task<T> CheckAvailability<T>([Body] CheckAvailabilityOptions body);
 
+        [Get("/Portal/Services/UserAccountService.svc/SetMessageAsValidated?messageId={messageId}&token={token}")]
+        Task<T> SetMessageAsValidated<T>(
+       [AliasAs("messageId")] int messageId,
+       [AliasAs("token")] string token);
+
         [Post("/Portal/ILSClient.svc/GetHoldings")]
         Task<T> SearchLibrary<T>([Body]SearchLibraryOptions body);
 

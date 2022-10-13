@@ -18,8 +18,8 @@
                     <RowDefinition Height="0.4*"></RowDefinition>
                     <RowDefinition Height="0.6*"></RowDefinition>
                 </Grid.RowDefinitions>
-                <Label Margin="20" Grid.Row="0" HorizontalOptions="Center" VerticalOptions="Center" Text="{Binding CookiesSave.Username}"></Label>
-                <zxing:ZXingBarcodeImageView HorizontalOptions="Center" VerticalOptions="Center" Grid.Row="1" WidthRequest="500" HeightRequest="150" BarcodeValue="{Binding CookiesSave.CodeBare}" BarcodeFormat="CODE_39">
+                <Label Margin="20" Grid.Row="0" HorizontalOptions="Center" VerticalOptions="Center" Text="{Binding CookiesSave.DisplayName}"></Label>
+                <zxing:ZXingBarcodeImageView HorizontalOptions="Center" VerticalOptions="Center" Grid.Row="1" WidthRequest="500" HeightRequest="150" BarcodeValue="{Binding CookiesSave.Username}" BarcodeFormat="CODE_39">
                     <zxing:ZXingBarcodeImageView.BarcodeOptions>
                         <zxcm:EncodingOptions Width="auto" Height="auto" />
                     </zxing:ZXingBarcodeImageView.BarcodeOptions>

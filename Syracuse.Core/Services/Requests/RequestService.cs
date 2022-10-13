@@ -348,6 +348,38 @@ namespace Syracuse.Mobitheque.Core.Services.Requests
 
         }
 
+        public async Task<InstanceResult<UserDemands>> SetMessageAsValidated(int messageId, Action<Exception> error = null)
+        {
+            if (!App.AppState.NetworkConnection)
+            {
+                Debug.WriteLine("NetworkConnection" + App.AppState.NetworkConnection);
+            }
+            await this.InitializeHttpClient();
+            var status = new InstanceResult<UserDemands>();
+            try
+            {
+                var timestamp = this.Timestamp();
+                this.token = this.Timestamp();
+                status = await this.requests.SetMessageAsValidated<InstanceResult<UserDemands>>(messageId, this.token);
+                await UpdateCookies();
+            }
+            catch (Exception ex)
+            {
+                status.Errors = new Error[1];
+                if (!App.AppState.NetworkConnection)
+                {
+                    status.Errors[0] = new Error(ApplicationResource.NetworkDisable);
+                }
+                else
+                {
+                    status.Errors[0] = new Error(ApplicationResource.ErrorOccurred);
+                }
+                error?.Invoke(ex);
+            }
+            return status;
+        }
+
+
         public async Task<CheckAvailabilityResult> CheckAvailability(CheckAvailabilityOptions options, Action<Exception> error = null)
         {
             if (!App.AppState.NetworkConnection)
