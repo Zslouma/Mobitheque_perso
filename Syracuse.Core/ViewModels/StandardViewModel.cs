@@ -216,5 +216,43 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             }
             return search?.D?.Results;
         }
+        private String eventsScenarioCode;
+        public string EventsScenarioCode
+        {
+            get => this.eventsScenarioCode;
+            set
+            {
+                SetProperty(ref this.eventsScenarioCode, value);
+            }
+        }
+        public async Task GoToDetailView(Result item)
+        {
+            var parameter = new SearchResult[2];
+            for (int i = 0; i < 2; i++)
+            {
+                parameter[i] = new SearchResult();
+                parameter[i].D = new D();
+            }
+            Result[] tmpResults = { new Result() };
+            parameter[0].D.Results = tmpResults;
+            parameter[0].D.Results[0] = item;
+            parameter[1].D.Results = tmpResults;
+            parameter[1].D.Results = this.Results;
+            SearchOptions searchOptions = new SearchOptions();
+            searchOptions.Query = new SearchOptionsDetails()
+            {
+                ScenarioCode = this.eventsScenarioCode,
+                Page = this.page,
+
+            };
+            var tempo = new SearchDetailsParameters()
+            {
+                parameter = parameter,
+                searchOptions = searchOptions,
+                nbrResults = this.NbrResults.ToString()
+            };
+            await this.navigationService.Navigate<SearchDetailsViewModel, SearchDetailsParameters>(tempo);
+        }
+
     }
 }

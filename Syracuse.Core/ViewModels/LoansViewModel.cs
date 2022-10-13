@@ -95,7 +95,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
                 {
                     if (res.D.SuccessCount > 0)
                     {
-                        this.DisplayAlert(ApplicationResource.Success, String.Format(ApplicationResource.SuccessExtendLoan, loans.Title), ApplicationResource.ButtonValidation);
+                        this.DisplayAlert("Confirmation", String.Format(ApplicationResource.SuccessExtendLoan, loans.Title), ApplicationResource.ButtonValidation);
                     }
                     else
                     {

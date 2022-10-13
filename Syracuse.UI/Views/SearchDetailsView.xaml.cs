@@ -124,6 +124,8 @@ namespace Syracuse.Mobitheque.UI.Views
                         if (item.Libelle == value)
                         {
                             data.HoldingPlace = item.Code;
+                            data.Site = item.Libelle;
+                            data.SiteCode = item.Code;
                         }
                     }
                 }

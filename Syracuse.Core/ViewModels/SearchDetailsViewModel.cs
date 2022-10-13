@@ -217,6 +217,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
                 {
                     await LoadMore(false);
                 }
+               
                 this.ItemsSource[0] = this.ItemsSource[0].Clone();
                 await this.RaisePropertyChanged(nameof(this.ItemsSource));
                 await this.RaisePropertyChanged(nameof(this.CurrentItem));
@@ -284,8 +285,8 @@ namespace Syracuse.Mobitheque.Core.ViewModels
                 resultTempo.DisplayValues.SeekForHoldings = resultTempo.SeekForHoldings && this.ReversIsKm;
                 Console.WriteLine("resultTempo.Resource.RscBase : "+ resultTempo.Resource.RscBase);
                 await PerformSearch(resultTempo.Resource.RscId, resultTempo.Resource.RscBase);
-                this.BuildHoldingsStatements();
-                this.BuildHoldings();
+               // this.BuildHoldingsStatements();
+              //  this.BuildHoldings();
                 resultTempo.DisplayValues.Library = this.Library;
                 resultTempo.DisplayValues.Library.success = resultTempo.DisplayValues.Library.success && resultTempo.DisplayValues.SeekForHoldings;
                 if (resultTempo.DisplayValues.Library.success)
@@ -587,7 +588,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
                 else
                 {
                     await PerformSearch(null);
-                    this.DisplayAlert(ApplicationResource.Success, ApplicationResource.SuccessBookingRequest, ApplicationResource.ButtonValidation);
+                    this.DisplayAlert("Confirmation", ApplicationResource.SuccessBookingRequest, ApplicationResource.ButtonValidation);
                 }
                 }
             catch (Exception ex)

@@ -131,7 +131,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             }
             if (SummaryAccount != null)
             {
-                this.TotalBorrowedDocuments = (this.SummaryAccount.LoansTotalCount > 1) ? String.Format(ApplicationResource.AccountInfoCountOfLoans, SummaryAccount.LoansTotalCount) 
+                this.TotalBorrowedDocuments = (this.SummaryAccount.LoansTotalCount >= 1) ? String.Format(ApplicationResource.AccountInfoCountOfLoans, SummaryAccount.LoansTotalCount) 
                 : String.Format(ApplicationResource.AccountInfoCountOfLoan, SummaryAccount.LoansLateCount);
                 this.LateBorrowedDocuments =
                     (this.SummaryAccount.LoansLateCount > 1) ? String.Format(ApplicationResource.AccountInfoCountLateLoans, SummaryAccount.LoansLateCount)

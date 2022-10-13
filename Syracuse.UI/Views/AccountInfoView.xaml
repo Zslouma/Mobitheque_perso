@@ -14,7 +14,7 @@
     <ContentPage.Content>
         <yummy:PancakeView Margin="0,15,0,0" CornerRadius="32,32,0,0" VerticalOptions="FillAndExpand" BackgroundColor="{d:DynamicResource AppSecondaryBackgroundColor}">
             <ScrollView>
-            <Grid>
+                <Grid>
                     <StackLayout>
                         <Label VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Margin="0,10,0,10"  TextColor="{d:DynamicResource DarkTextColor}">
                             <Label.FormattedText>
@@ -27,15 +27,15 @@
                             </Label.FormattedText>
                         </Label>
                         <Grid>
-                        <Grid.RowDefinitions>
+                            <Grid.RowDefinitions>
                                 <RowDefinition  Height="Auto"/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
+                            <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                        <Label Text="{Binding SummaryAccount.DisplayName}"
+                            <Label Text="{Binding SummaryAccount.DisplayName}"
                             TextColor="{d:DynamicResource PurpleTextColor}"
                             FontSize="18"
                             HorizontalTextAlignment="Center"
@@ -43,41 +43,41 @@
                             Margin="0,0,0,20"
                             Grid.Row="0"
                             Grid.Column="0" />
-                        <StackLayout
+                            <StackLayout
                             Grid.Row="1"
                             Grid.Column="0">
                                 <yummy:PancakeView VerticalOptions="FillAndExpand" Margin="15,5" Padding="10" CornerRadius="10" Border="{yummy:BorderMarkup Color=LightGray, Thickness=1}">
-                                <StackLayout 
+                                    <StackLayout 
                                             HorizontalOptions="Start"
                                             Padding="15,0,0,0"
                                             x:Name="InfoList">
-                                    <StackLayout.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding TapBorrowedCommand}"/>
-                                    </StackLayout.GestureRecognizers>
+                                        <StackLayout.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding TapBorrowedCommand}"/>
+                                        </StackLayout.GestureRecognizers>
                                         <Label Margin="0, 0, 0, 5" FontSize="18" TextColor="{d:DynamicResource DarkTextColor}"  Text="{Binding TotalBorrowedDocuments}" ></Label>
                                         <Label Margin="10, 0, 0, 5" FontSize="18" TextColor="Red" IsVisible="{Binding IsLateVisibility}" Text="{Binding LateBorrowedDocuments}"></Label>
-                                </StackLayout>
-                            </yummy:PancakeView>
-                            <yummy:PancakeView VerticalOptions="FillAndExpand" Margin="15,5" Padding="10" CornerRadius="10" Border="{yummy:BorderMarkup Color=LightGray, Thickness=1}">
-                                <StackLayout 
+                                    </StackLayout>
+                                </yummy:PancakeView>
+                                <yummy:PancakeView VerticalOptions="FillAndExpand" Margin="15,5" Padding="10" CornerRadius="10" Border="{yummy:BorderMarkup Color=LightGray, Thickness=1}">
+                                    <StackLayout 
                                             HorizontalOptions="Start" 
                                             Padding="15,0,0,0">
-                                    <StackLayout.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding TapBookingCommand}"/>
-                                    </StackLayout.GestureRecognizers>
+                                        <StackLayout.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding TapBookingCommand}"/>
+                                        </StackLayout.GestureRecognizers>
                                         <Label Margin="0, 0, 0, 5" FontSize="18" TextColor="{d:DynamicResource DarkTextColor}" Text="{Binding TotalBookingDocuments}"></Label>
                                         <Label Margin="10, 0, 0, 5" FontSize="18" TextColor="{d:DynamicResource AccountInfoTextColor}" Text="{Binding AvailableBookingDocuments}"></Label>
-                                </StackLayout>
-                            </yummy:PancakeView>
-                        </StackLayout>
+                                    </StackLayout>
+                                </yummy:PancakeView>
+                            </StackLayout>
 
-                    </Grid>
-                </StackLayout>
-                <AbsoluteLayout IsVisible="{Binding IsBusy}" VerticalOptions="FillAndExpand" Opacity="0.6" BackgroundColor="Gray" >
-                    <ActivityIndicator IsRunning="True" AbsoluteLayout.LayoutFlags="PositionProportional" Color="White" AbsoluteLayout.LayoutBounds=".5,.5,-1,-1" />
-                </AbsoluteLayout>
-            </Grid>
-                </ScrollView>
+                        </Grid>
+                    </StackLayout>
+                    <AbsoluteLayout IsVisible="{Binding IsBusy}" VerticalOptions="FillAndExpand" Opacity="0.6" BackgroundColor="Gray" >
+                        <ActivityIndicator IsRunning="True" AbsoluteLayout.LayoutFlags="PositionProportional" Color="White" AbsoluteLayout.LayoutBounds=".5,.5,-1,-1" />
+                    </AbsoluteLayout>
+                </Grid>
+            </ScrollView>
         </yummy:PancakeView>
     </ContentPage.Content>
 

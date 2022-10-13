@@ -56,6 +56,7 @@
                                                 </OnPlatform>
                                             </Frame.HasShadow>
                                             <Image VerticalOptions="Center" Source="{Binding FieldList.Image}" HeightRequest="120" WidthRequest="90" BackgroundColor="Transparent"/>
+                                       
                                         </Frame>
                                         <StackLayout VerticalOptions="Center" Orientation="Vertical">
                                             <Label TextColor="Black" Text="{Binding FieldList.Title[0]}" MaxLines="2" FontAttributes="Bold" FontSize="Medium"/>
@@ -65,6 +66,11 @@
                                                 <Label TextColor="Gray" FontAttributes="Bold" VerticalOptions="Center" FontSize="Medium" Text="{Binding Resource.TextStatus}"/>
                                             </StackLayout>
                                         </StackLayout>
+
+                                            <StackLayout.GestureRecognizers>
+                                                <TapGestureRecognizer CommandParameter="{Binding .}" Tapped="ResultsList_ItemTapped"/>
+
+                                            </StackLayout.GestureRecognizers>
                                     </StackLayout>
                                 </ViewCell>
                             </DataTemplate>

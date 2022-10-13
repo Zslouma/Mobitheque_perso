@@ -551,6 +551,26 @@ namespace Syracuse.Mobitheque.Core.Models
                 DisplayValues = this.DisplayValues,
             };
         }
+        public Result CloneEvent()
+        {
+            return new Result
+            {
+                CustomResult = this.CustomResult,
+                FriendlyUrl = this.FriendlyUrl,
+                GroupedResults = this.GroupedResults,
+                HasDigitalReady = this.HasDigitalReady,
+                HasPrimaryDocs = this.HasPrimaryDocs,
+                HighLights = this.HighLights,
+                LinkedResultsTwin = this.LinkedResultsTwin,
+                PrimaryDocs = this.PrimaryDocs,
+                Resource = this.Resource,
+                SeekForHoldings = this.SeekForHoldings,
+                TemplateLabel = this.TemplateLabel,
+                WorksKeyResults = this.WorksKeyResults,
+                FieldList = this.FieldList,
+                DisplayValues = this.DisplayValues,
+            };
+        }
     }
     public partial class Suggestions
     {
