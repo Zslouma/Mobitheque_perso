@@ -80,6 +80,9 @@
     <Compile Update="Views\MyPage.xaml.cs">
       <DependentUpon>BookingView.xaml</DependentUpon>
     </Compile>
+    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="AppResource.fr.Designer.cs">
+      <DependentUpon>AppResource.fr.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

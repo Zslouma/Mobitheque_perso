@@ -226,8 +226,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
                 this.EndDataPosition = tempo + 10 < parameterTempo[1].D.Results.Length ? tempo + 10 : parameterTempo[1].D.Results.Length - 1;
                 await this.FormateToCarrousel(this.StartDataPosition, this.EndDataPosition, false);
                 this.CurrentItem = this.ItemsSource[tempo];
-                this.Linkdesc = GetLink(this.CurrentItem.Resource.Desc);
-                Console.WriteLine(this.Linkdesc);
+                
                 this.Position = tempo;
                 this.IsPositionVisible = true;
                 if (tempo >= (this.ItemsSource.Count() - 5) && int.Parse(this.NbrResults) > this.ItemsSource.Count)

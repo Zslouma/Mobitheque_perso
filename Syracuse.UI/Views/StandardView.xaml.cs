@@ -17,7 +17,7 @@ namespace Syracuse.Mobitheque.UI.Views
         }
         private async void ResultsList_ItemTapped(object sender, System.EventArgs e)
         {
-            var frm = (Frame)sender;
+            var frm = (StackLayout)sender;
             TapGestureRecognizer gst = (TapGestureRecognizer)frm.GestureRecognizers[0];
             var item = gst.CommandParameter as Result;
             await this.ViewModel.GoToDetailView(item);

@@ -240,7 +240,7 @@ L’annulation est définitive.</value>
     <value>Mes prêts</value>
   </data>
   <data name="LoansDateBefore" xml:space="preserve">
-    <value>A rendre avant le </value>
+    <value>A rendre le </value>
   </data>
   <data name="LoansDateLate" xml:space="preserve">
     <value>En retard depuis le </value>

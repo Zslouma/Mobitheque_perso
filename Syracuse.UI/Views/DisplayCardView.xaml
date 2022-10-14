@@ -21,7 +21,7 @@
                 <Label Margin="20" Grid.Row="0" HorizontalOptions="Center" VerticalOptions="Center" Text="{Binding CookiesSave.DisplayName}"></Label>
                 <zxing:ZXingBarcodeImageView HorizontalOptions="Center" VerticalOptions="Center" Grid.Row="1" WidthRequest="500" HeightRequest="150" BarcodeValue="{Binding CookiesSave.Username}" BarcodeFormat="CODE_39">
                     <zxing:ZXingBarcodeImageView.BarcodeOptions>
-                        <zxcm:EncodingOptions Width="auto" Height="auto" />
+                        <zxcm:EncodingOptions Width="500" Height="150" />
                     </zxing:ZXingBarcodeImageView.BarcodeOptions>
                 </zxing:ZXingBarcodeImageView>
             </Grid>
