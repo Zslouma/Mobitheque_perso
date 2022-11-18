@@ -306,7 +306,84 @@ namespace Syracuse.Mobitheque.Core.ViewModels
                 return;
 
 
-            this.PerformSearch(null, this.SortName, false);
+            
+                await getNextPageSorted(this.SortName, this.SortOrder);
+
+
+        }
+
+        private async Task getNextPageSorted(string sortName, int sortOrder)
+        {
+            this.IsBusy = true;
+
+            Result[] res = await loadPageSort(sortName, sortOrder);
+            this.Results = res;
+            this.IsBusy = false;
+        }
+
+        private async Task<Result[]> loadPageSort(string sortName, int sortOrder)
+        {
+            SearchOptions optionsTempo = new SearchOptions();
+
+
+
+            optionsTempo.Query = new SearchOptionsDetails()
+            {
+                SortOrder = sortOrder,
+                SortField = sortName,
+                ScenarioCode = (await App.Database.GetActiveUser()).SearchScenarioCode,
+                QueryString = this.SearchQuery,
+                FacetFilter = this.FacetFilter,
+                Page = this.page
+            };
+            SearchResult search = await this.requestService.Search(optionsTempo);
+            if (search != null && !search.Success)
+            {
+                this.DisplayAlert(ApplicationResource.Error, search.Errors?[0]?.Msg != null ? search.Errors?[0]?.Msg : ApplicationResource.ErrorOccurred, ApplicationResource.ButtonValidation);
+                return new Result[0];
+            }
+            else if (search.Success && search.D != null)
+            {
+                search.D.Results = await this.CheckAvailability(search.D.Results, this.SearchQuery);
+            }
+            return search?.D?.Results;
+        }
+
+        public async Task<Result[]> CheckAvailability(Result[] results, string search, string facetFilter = "")
+        {
+
+            List<RecordIdArray> RecordIdArray = new List<RecordIdArray>();
+            CheckAvailabilityOptions optionsTempo = new CheckAvailabilityOptions();
+
+            foreach (var result in results)
+            {
+                RecordIdArray.Add(new RecordIdArray(result.Resource.RscBase, result.Resource.RscId, result.Resource.Frmt));
+            }
+
+            optionsTempo.Query = new SearchOptionsDetails()
+            {
+                SortOrder = this.SortOrder,
+                SortField = this.SortName,
+                ScenarioCode = (await App.Database.GetActiveUser()).SearchScenarioCode,
+                QueryString = search,
+                FacetFilter = facetFilter
+            };
+            optionsTempo.RecordIdArray = RecordIdArray;
+
+            // HTTP Request
+            CheckAvailabilityResult rslts = await this.requestService.CheckAvailability(optionsTempo);
+
+            var resultTempo = results.ToList();
+            if (rslts.Success && rslts.D != null)
+            {
+                foreach (var rslt in rslts.D)
+                {
+                    int v = resultTempo.FindIndex(x => x.Resource.RscId == rslt.Id.RscId);
+                    results[v].Resource.HtmlViewDisponibility = rslt.HtmlView;
+                }
+            }
+
+            return results;
         }
         #endregion
 

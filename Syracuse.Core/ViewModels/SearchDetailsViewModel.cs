@@ -375,8 +375,11 @@ namespace Syracuse.Mobitheque.Core.ViewModels
                 }
                 this.ItemsSource[i].DisplayValues.SeekForHoldings = this.ItemsSource[i].SeekForHoldings && this.ReversIsKm;
                 await PerformSearch(this.ItemsSource[i].Resource.RscId, this.ItemsSource[i].Resource.RscBase);
-                this.BuildHoldingsStatements();
-                this.BuildHoldings();
+                        if (this.ItemsSource[i].Resource.Frmt != "AGDA")
+                        {
+                            this.BuildHoldingsStatements();
+                            this.BuildHoldings();
+                        }
                 this.ItemsSource[i].DisplayValues.Library = this.Library;
                 this.ItemsSource[i].DisplayValues.Library.success = this.ItemsSource[i].DisplayValues.Library.success && this.ItemsSource[i].DisplayValues.SeekForHoldings;
                 if (this.ItemsSource[i].DisplayValues.Library.success)

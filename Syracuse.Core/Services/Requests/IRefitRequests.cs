@@ -7,7 +7,7 @@ namespace Syracuse.Mobitheque.Core.Services.Requests
 {
     public interface IRefitRequests
     {
-        [Post("/logon.svc/logon")]
+        [Post("/logon.svc/logon?changeUser=true")]
         Task<T> Authentication<T>([Body(BodySerializationMethod.UrlEncoded)]Dictionary<string, object> data);
 
         [Post("/logon.svc/GetUrlWithAuthenticationTransfert")]
@@ -29,6 +29,8 @@ namespace Syracuse.Mobitheque.Core.Services.Requests
                                [AliasAs("token")] string token,
                                [AliasAs("code")]string code = "",
                                [AliasAs("uniqueId")]string uniqueId = "");
+        [Post("/Portal/Services/UserAccountService.svc/AnswerDemand")]
+        Task<T> AnswerDemand<T>([Body] DemandsOptions body);
 
         [Get("/Portal/Services/UserAccountService.svc/ListHandings?serviceCode{code}&userUniqueIdentifier={uniqueId}&token={token}")]
         Task<T> GetHandlings<T>([AliasAs("token")] string token,

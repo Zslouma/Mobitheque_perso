@@ -46,7 +46,7 @@
                         </StackLayout>
                     </StackLayout>
                 </ListView.Header>
-                
+
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell >
@@ -64,22 +64,22 @@
                                     </Grid.ColumnDefinitions>
                                     <Label Grid.Column="0" HorizontalTextAlignment="Center" VerticalOptions="Center" Text="{Binding IconFontAwesome}" FontFamily="{StaticResource FontAwesomeSolid}" FontSize="Title" TextColor="WhiteSmoke"/>
                                     <StackLayout Grid.Column="1" VerticalOptions="Center" >
-                                    <material:MaterialLabel 
+                                        <material:MaterialLabel 
                                         VerticalOptions="Center"
                                         Text="{Binding Text}"
                                         FontSize="{DynamicResource FontSize}"
                                         FontFamily="{DynamicResource OpenSans}"
                                         TextColor="White">
-                                    <material:MaterialLabel.Triggers>
-                                        <DataTrigger TargetType="Label" Binding="{Binding IsSelected}" Value="False">
-                                            <Setter Property="IsVisible" Value="True" />
-                                        </DataTrigger>
-                                        <DataTrigger TargetType="Label" Binding="{Binding IsSelected}" Value="True">
-                                            <Setter Property="IsVisible" Value="False" />
-                                        </DataTrigger>
-                                    </material:MaterialLabel.Triggers>
-                                </material:MaterialLabel>
-                                <material:MaterialLabel 
+                                            <material:MaterialLabel.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding IsSelected}" Value="False">
+                                                    <Setter Property="IsVisible" Value="True" />
+                                                </DataTrigger>
+                                                <DataTrigger TargetType="Label" Binding="{Binding IsSelected}" Value="True">
+                                                    <Setter Property="IsVisible" Value="False" />
+                                                </DataTrigger>
+                                            </material:MaterialLabel.Triggers>
+                                        </material:MaterialLabel>
+                                        <material:MaterialLabel 
                                         VerticalOptions="Center"
                                         IsVisible="{Binding IsSelected}"
                                         Text="{Binding Text}"
@@ -90,7 +90,7 @@
                                     </StackLayout>
                                 </Grid>
                             </StackLayout>
-                            
+
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>

@@ -53,6 +53,9 @@
     <Compile Update="Views\AccountUserDemandsChatView.xaml.cs">
       <DependentUpon>AccountUserDemandsChatView.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\PopUp\AnswerDemandPopup.xaml.cs">
+      <DependentUpon>AnswerDemandPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\WebAndCookiesAuthentificationView.xaml.cs">
       <DependentUpon>WebAndCookiesAuthentificationView.xaml</DependentUpon>
     </Compile>
@@ -110,6 +113,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\AccountUserDemandsView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\PopUp\AnswerDemandPopup.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Templates\QRCodeScanner.xaml">

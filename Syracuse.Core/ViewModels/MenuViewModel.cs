@@ -99,7 +99,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             }
         }
 
-        public async Task NavigationStandardView( string name)
+        public async Task NavigationStandardView(string name)
         {
             UnicodeEncoding unicode = new UnicodeEncoding();
             foreach (var item in this.StandartViewLists)
@@ -142,8 +142,9 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             }
             this.menuItemList = new ObservableCollection<MenuNavigation>() { };
             this.menuItemList.Add(new MenuNavigation() { Text = ApplicationResource.Home, IconFontAwesome = "\uf015", IsSelected = true });
+            this.AddStandardView();
+
             this.menuItemList.Add(new MenuNavigation() { Text = ApplicationResource.Account, IconFontAwesome = "\uf007" });
-            this.menuItemList.Add(new MenuNavigation() { Text = ApplicationResource.OtherAccount, IconFontAwesome = "\uf0c0" });
             if (!IsKm)
             {
                 this.menuItemList.Add(new MenuNavigation() { Text = ApplicationResource.Bookings, IconFontAwesome = "\uf017" });
@@ -151,15 +152,16 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             }
             this.menuItemList.Add(new MenuNavigation() { Text = ApplicationResource.Scan, IconFontAwesome = "\uf02a" });
             this.menuItemList.Add(new MenuNavigation() { Text = ApplicationResource.Library, IconFontAwesome = "\uf66f" });
-            this.AddStandardView();
+            this.menuItemList.Add(new MenuNavigation() { Text = ApplicationResource.OtherAccount, IconFontAwesome = "\uf0c0" });
+
             this.menuItemList.Add(new MenuNavigation() { Text = ApplicationResource.About, IconFontAwesome = "\uf05a" });
             this.menuItemList.Add(new MenuNavigation() { Text = ApplicationResource.Disconnect, IconFontAwesome = "\uf011" });
             await this.RaiseAllPropertiesChanged();
             this.ShowDetailPageCommand = new MvxAsyncCommand<string>(this.ShowDetailPageAsync);
-            
+
         }
 
-        private async Task RefreshMenuItem( string name)
+        private async Task RefreshMenuItem(string name)
         {
             var MenuItemListtempo = this.MenuItemList;
             foreach (var item in MenuItemListtempo)
@@ -209,7 +211,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
              */
             if (Application.Current.MainPage is MasterDetailPage masterDetailPage)
                 masterDetailPage.IsPresented = false;
-            else if (Application.Current.MainPage is NavigationPage navigationPage && 
+            else if (Application.Current.MainPage is NavigationPage navigationPage &&
                      navigationPage.CurrentPage is MasterDetailPage nestedMasterDetail)
                 nestedMasterDetail.IsPresented = false;
         }
@@ -221,9 +223,10 @@ namespace Syracuse.Mobitheque.Core.ViewModels
         /// <param name="e"></param>
         public void LoansNavigation(object sender, IMvxNavigateEventArgs e)
         {
-            
+
             var key = e.ViewModel.ToString();
-            if (DictionaryViewModelLabel.ContainsKey(key)) {
+            if (DictionaryViewModelLabel.ContainsKey(key))
+            {
                 this.RefreshMenuItem(DictionaryViewModelLabel[key]).Wait();
             }
 

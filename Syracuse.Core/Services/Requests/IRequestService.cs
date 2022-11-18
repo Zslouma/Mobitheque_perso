@@ -43,6 +43,7 @@ namespace Syracuse.Mobitheque.Core.Services.Requests
         Task<BookingResult> GetBookings(Action<Exception> error = null);
 
         Task<InstanceResult<List < UserDemands >>> GetUserDemands(Action<Exception> error = null);
+        Task<InstanceResult<object>> AnswerDemand(DemandsOptions options, Action<Exception> error = null);
 
         Task<SearchResult> Search(SearchOptions options, Action<Exception> error = null);
 

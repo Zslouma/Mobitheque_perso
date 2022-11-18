@@ -10,8 +10,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Xamarin.Forms;
-using Xamarin.Forms.PlatformConfiguration.TizenSpecific;
 
 namespace Syracuse.Mobitheque.Core.ViewModels
 {
@@ -29,27 +27,29 @@ namespace Syracuse.Mobitheque.Core.ViewModels
         public string UserName
         {
             get => this.username;
-            set {
+            set
+            {
                 SetProperty(ref this.username, value);
                 this.UserNameIsError = false;
                 this.RaisePropertyChanged(nameof(this.ButtonColor));
                 this.RaisePropertyChanged(nameof(this.TextColor));
                 this.RaisePropertyChanged(nameof(this.UserNameIsError));
-            } 
+            }
         }
 
-        public List<SSO> ListSSO { get; set;}
+        public List<SSO> ListSSO { get; set; }
 
         public string Password
         {
             get => this.password;
-            set {
+            set
+            {
                 SetProperty(ref this.password, value);
                 this.PasswordIsError = false;
                 this.RaisePropertyChanged(nameof(ButtonColor));
                 this.RaisePropertyChanged(nameof(TextColor));
                 this.RaisePropertyChanged(nameof(this.PasswordIsError));
-            } 
+            }
         }
 
         private String library;
@@ -94,7 +94,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
 
         public LoginViewModel(
                               IRequestService requestService,
-                              IGeolocationService geolocationService, 
+                              IGeolocationService geolocationService,
                               IDepartmentService departmentService,
                               IMvxNavigationService navigationService)
         {
@@ -128,10 +128,12 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             isLoading = true;
             await RaisePropertyChanged(nameof(IsLoading));
             bool error = await ConnectApiCall();
-            if (error) { 
+            if (error)
+            {
                 await this.navigationService.Navigate<MasterDetailViewModel>();
             }
-            else { 
+            else
+            {
                 isLoading = false;
                 await RaisePropertyChanged(nameof(IsLoading));
             }
@@ -139,14 +141,15 @@ namespace Syracuse.Mobitheque.Core.ViewModels
 
         private async Task<bool> ConnectApiCall()
         {
-  
+
             var result = await this.requestService.Authentication(this.username, this.password, this.department.LibraryUrl, (x) =>
             {
                 this.DisplayAlert(ApplicationResource.Error, x.Message, ApplicationResource.ButtonValidation);
             });
+
             if (result == null)
                 return false;
-            else  if (!result.Success)
+            else if (!result.Success)
             {
                 this.DisplayAlert(ApplicationResource.Error, result.Errors?[0]?.Msg, ApplicationResource.ButtonValidation);
                 return false;
@@ -165,14 +168,8 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             {
                 item.Username = this.username;
             }
-            List<StandartViewList> removeStandardList = await App.Database.GetActiveStandartView(b);
-            foreach (var removeItem in removeStandardList)
-            {
-                await App.Database.DeleteItemAsync(removeItem);
-            }
-            await App.Database.SaveItemAsync(this.departmentStandarViewList);
+            await App.Database.UpdateItemsAsync(this.departmentStandarViewList, b);
             this.requestService.LoadCookies(JsonConvert.DeserializeObject<Cookie[]>(b.Cookies));
-            await this.requestService.RenderAccountWebFrame(new AccountWebFrameOptions());
             return true;
         }
 
@@ -196,7 +193,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
         {
             this.department = parameter.CookiesSave;
             this.departmentStandarViewList = parameter.StandartViewList;
-            this.ListSSO = parameter.ListSSO == null ? new List<SSO>() : parameter.ListSSO;
+            this.ListSSO = parameter.ListSSO;
             this.Library = this.department.Library;
         }
 

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
+using Xamarin.Forms.Internals;
 
 namespace Syracuse.Mobitheque.Core.ViewModels
 {
@@ -16,10 +17,33 @@ namespace Syracuse.Mobitheque.Core.ViewModels
         private readonly IMvxNavigationService navigationService;
         private readonly IRequestService requestService;
         private readonly DepartmentService departmentService = new DepartmentService();
-        private bool _isnetworkError = false;
-        private bool _isnetworkErrorAppend = false; 
+        private bool __isnetworkError = false;
+        private bool _isnetworkError
+        {
+            get { return __isnetworkError; }
+            set
+            {
+                this.__isnetworkError = value;
+                if (this.viewCreate && value)
+                {
+                  //  this.navigationService.Navigate<DownloadViewModel>();
+                }
+            }
+        }
+
+        private bool _isnetworkErrorAppend = false;
         private string param;
         private bool viewCreate = false;
+
+        private CookiesSave user;
+        public CookiesSave User
+        {
+            get => this.user;
+            set
+            {
+                SetProperty(ref this.user, value);
+            }
+        }
 
         public MasterDetailViewModel(IMvxNavigationService navigationService, IRequestService requestService)
         {
@@ -30,35 +54,34 @@ namespace Syracuse.Mobitheque.Core.ViewModels
         public async override void Prepare(string parameter)
         {
             param = parameter;
+            this.Connectivity_test();
             base.Prepare();
         }
 
-        public override void Start()
+        public async Task JsonSynchronisation()
         {
-            Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
-            this.Connectivity_test().Wait();
-            base.Start();
-        }
-         public async Task JsonSynchronisation()
-        {
-            Console.WriteLine("JsonSynchronisation");
-            CookiesSave user = await App.Database.GetActiveUser();
-            if (user != null)
+            this.User = await App.Database.GetActiveUser();
+            if (User != null)
             {
-                Library Alllibraries = await this.departmentService.GetLibraries(user.LibraryJsonUrl,true);
+                Library[] Alllibraries = await this.departmentService.GetLibraries(true);
                 if (!(Alllibraries is null))
                 {
                     try
                     {
-                        Library library = Alllibraries;
-                        user.LibraryUrl = library.Config.BaseUri;
-                        user.DomainUrl = library.Config.DomainUri;
-                        user.EventsScenarioCode = library.Config.EventsScenarioCode;
-                        user.SearchScenarioCode = library.Config.SearchScenarioCode;
-                        user.IsEvent = library.Config.IsEvent;
-                        user.IsKm = library.Config.IsKm;
-                        user.BuildingInfos = JsonConvert.SerializeObject(library.Config.BuildingInformations);
-                        await App.Database.SaveItemAsync(user);
+                        Library library = Array.Find(Alllibraries, element => element.Name == user.Library && element.Code == user.LibraryCode);
+                        this.User.Department = library.DepartmentCode;
+                        this.User.Library = library.Name;
+                        this.User.LibraryCode = library.Code;
+                        this.User.LibraryUrl = library.Config.BaseUri;
+                        this.User.DomainUrl = library.Config.DomainUri;
+                        this.User.ForgetMdpUrl = library.Config.ForgetMdpUri;
+                        this.User.EventsScenarioCode = library.Config.EventsScenarioCode;
+                        this.User.SearchScenarioCode = library.Config.SearchScenarioCode;
+                        this.User.IsEvent = library.Config.IsEvent;
+                        this.User.RememberMe = library.Config.RememberMe;
+                        this.User.IsKm = library.Config.IsKm;
+                       // this.User.CanDownload = library.Config.CanDownload;
+                        this.User.BuildingInfos = JsonConvert.SerializeObject(library.Config.BuildingInformations);
                         List<StandartViewList> standartViewList = new List<StandartViewList>();
                         foreach (var item in library.Config.StandardsViews)
                         {
@@ -66,28 +89,23 @@ namespace Syracuse.Mobitheque.Core.ViewModels
 
                             tempo.ViewName = item.ViewName;
                             tempo.ViewIcone = item.ViewIcone;
-                            Console.WriteLine("ViewIcone :" + item.ViewIcone);
                             tempo.ViewQuery = item.ViewQuery;
                             tempo.ViewScenarioCode = item.ViewScenarioCode;
-                            tempo.Username = user.Username;
-                            tempo.Library = library.Name;
+                            tempo.Username = this.User.Username;
+                            tempo.Library = this.User.Library;
                             standartViewList.Add(tempo);
                         }
-                        List<StandartViewList> removeStandardList = await App.Database.GetActiveStandartView(user);
-                        foreach (var removeItem in removeStandardList)
-                        {
-                            await App.Database.DeleteItemAsync(removeItem);
-                        }
-                        await App.Database.SaveItemAsync(standartViewList);
+
+                        await App.Database.UpdateItemsAsync(standartViewList, this.User);
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e.ToString());
+                        this.DisplayAlert(ApplicationResource.Error, e.ToString(), ApplicationResource.ButtonValidation);
                     }
                 }
-
+                await App.Database.SaveItemAsync(this.User);
             }
-           
+
         }
         public override void ViewDestroy(bool viewFinishing = true)
         {
@@ -96,11 +114,13 @@ namespace Syracuse.Mobitheque.Core.ViewModels
         }
         public override async void ViewAppearing()
         {
-            base.ViewAppearing();
-            await this.Connectivity_test();
-            await this.JsonSynchronisation();
-            CookiesSave user = await App.Database.GetActiveUser();
-            Cookie[] cookies = JsonConvert.DeserializeObject<Cookie[]>(user.Cookies);
+            this.Connectivity_test();
+            Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
+            if (App.AppState.NetworkConnection)
+            {
+                await this.JsonSynchronisation();
+            }
+            Cookie[] cookies = JsonConvert.DeserializeObject<Cookie[]>(this.User.Cookies);
             bool found = false;
             DateTime now = DateTime.Now;
             foreach (var cookie in cookies)
@@ -114,21 +134,23 @@ namespace Syracuse.Mobitheque.Core.ViewModels
                     cookie.Expired = true;
                 }
             }
-            user.Cookies = JsonConvert.SerializeObject(cookies);
+            this.User.Cookies = JsonConvert.SerializeObject(cookies);
             if (!found)
             {
-                user.Active = false;
-                await App.Database.SaveItemAsync(user);
+                this.User.Active = false;
+                await App.Database.SaveItemAsync(this.User);
                 await this.navigationService.Navigate<SelectLibraryViewModel>();
                 return;
             }
             else
             {
-                await App.Database.SaveItemAsync(user);
-                var a = JsonConvert.DeserializeObject<Cookie[]>(user.Cookies);
+                await App.Database.SaveItemAsync(this.User);
+                var a = JsonConvert.DeserializeObject<Cookie[]>(this.User.Cookies);
                 this.requestService.LoadCookies(a);
             }
+            Log.Warning("Mobidoc", "Mobidoc Navigate Menu Start");
             await this.navigationService.Navigate<MenuViewModel>();
+            Log.Warning("Mobidoc", "Mobidoc Navigate Menu End");
             if (param != null)
             {
                 var options = new SearchOptionsDetails()
@@ -142,7 +164,7 @@ namespace Syracuse.Mobitheque.Core.ViewModels
             {
                 if (this._isnetworkError)
                 {
-                    await this.navigationService.Navigate<NetworkErrorViewModel>();
+                  //  await this.navigationService.Navigate<DownloadViewModel>();
                     this._isnetworkErrorAppend = true;
                 }
                 else
@@ -153,34 +175,33 @@ namespace Syracuse.Mobitheque.Core.ViewModels
                         this._isnetworkErrorAppend = false;
                     }
                 }
-                
+
             }
+            base.ViewAppearing();
             this.viewCreate = true;
 
         }
         void Connectivity_ConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
         {
-            Connectivity_test().Wait();
+            Connectivity_test();
         }
 
-        private async Task Connectivity_test()
+        private void Connectivity_test()
         {
             if (Connectivity.NetworkAccess != NetworkAccess.Internet)
             {
                 App.AppState.NetworkConnection = false;
-                if (this.viewCreate)
-                {
-                    await this.navigationService.Navigate<NetworkErrorViewModel>();
-                }
                 this._isnetworkError = true;
             }
             else
             {
                 App.AppState.NetworkConnection = true;
-                if (this._isnetworkError) {
+                if (this._isnetworkError)
+                {
                     this._isnetworkError = false;
                 }
             }
         }
+
     }
 }

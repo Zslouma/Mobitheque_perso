@@ -1,10 +1,8 @@
 ﻿using MvvmCross.Forms.Presenters.Attributes;
 using MvvmCross.Forms.Views;
-using Syncfusion.SfAutoComplete.XForms;
 using Syracuse.Mobitheque.Core.Models;
 using Syracuse.Mobitheque.Core.ViewModels;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace Syracuse.Mobitheque.UI.Views
 {
@@ -15,15 +13,26 @@ namespace Syracuse.Mobitheque.UI.Views
         {
             InitializeComponent();
         }
-        private async void ResultsList_ItemTapped(object sender, System.EventArgs e)
+        protected override void OnBindingContextChanged()
         {
-            var frm = (StackLayout)sender;
-            TapGestureRecognizer gst = (TapGestureRecognizer)frm.GestureRecognizers[0];
-            var item = gst.CommandParameter as Result;
-            await this.ViewModel.GoToDetailView(item);
+            (this.DataContext as StandardViewModel).OnDisplayAlert += StandardViewModel_OnDisplayAlert;
+            base.OnBindingContextChanged();
+        }
+        private async void ResultsList_ItemTapped(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.CurrentSelection.Count > 0)
+            {
+                var item = e.CurrentSelection[0] as Result;
+                await this.ViewModel.GoToDetailView(item);
+            }
+            else
+            {
+                await this.DisplayAlert("Erreur", "Une erreur est survenue", "Ok");
+            }
         }
 
-       
+     
 
+        private void StandardViewModel_OnDisplayAlert(string title, string message, string button) => this.DisplayAlert(title, message, button);
     }
 }

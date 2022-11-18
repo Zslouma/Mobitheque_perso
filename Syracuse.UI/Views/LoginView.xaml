@@ -11,21 +11,21 @@
                     x:Class="Syracuse.Mobitheque.UI.Views.LoginView"
                     xmlns:yummy="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView">
     <ContentPage.Content>
-        <ScrollView Padding="20,0" VerticalOptions="FillAndExpand">
-            <Grid  VerticalOptions="FillAndExpand">
+        <ScrollView VerticalOptions="FillAndExpand">
+            <Grid Padding="20,0" VerticalOptions="FillAndExpand">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Image Grid.Row="0" Source="logo_Syracuse" VerticalOptions="Start"></Image>
-                <StackLayout Grid.Row="1" Padding="15,0" VerticalOptions="FillAndExpand" x:Name="FormLayout" Spacing="20">
+                <StackLayout Grid.Row="1" Margin="15,0" VerticalOptions="FillAndExpand" x:Name="FormLayout" Spacing="20">
                     <Grid Margin="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="0.8*" />
                             <ColumnDefinition Width="0.2*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Label  Text="{Binding Library}" 
@@ -64,13 +64,13 @@
                                 ErrorText="{Binding UserNameErrorString}"
                                 TextColor="{DynamicResource WhiteTextColor}"
                                 TintColor="{DynamicResource WhiteTextColor}"
-                                BackgroundColor="Transparent"
+                                BackgroundColor="{DynamicResource AppBackgroundColor}"
                                 UnderlineColor="White"/>
                         </yummy:PancakeView>
                     </Grid>
 
                     <yummy:PancakeView VerticalOptions="Center" CornerRadius="10" Border="{yummy:BorderMarkup Color=White, Thickness=1}" Margin="0, 0, 0, 12" >
-                    <material:MaterialTextField 
+                        <material:MaterialTextField 
                         FloatingPlaceholderColor="{DynamicResource WhiteTextColor}"
                         PlaceholderColor="{DynamicResource WhiteTextColor}"
                         Placeholder="{x:Static local:AppResource.Password}"
@@ -85,9 +85,9 @@
                         ErrorText="{Binding PasswordErrorString}"
                         TextColor="{DynamicResource WhiteTextColor}"
                         TintColor="{DynamicResource WhiteTextColor}"
-                        BackgroundColor="Transparent"/>
+                        BackgroundColor="{DynamicResource AppBackgroundColor}"/>
                     </yummy:PancakeView>
-                    
+
                     <Button 
                         HorizontalOptions="FillAndExpand"
                         Text="{x:Static local:AppResource.Connect}"
@@ -99,16 +99,29 @@
                     />
 
                     <Button Text="{x:Static local:AppResource.PasswordForget}"
-                            IsVisible="{Binding CanDisplayForgetMDP}"
                             TextColor="AliceBlue"
                             BackgroundColor="Transparent"
-                            FontFamily=""
                             Clicked="OpenBrowser_OnClicked"/>
-                    <StackLayout x:Name="ListSSO" VerticalOptions="FillAndExpand"/>
+                    <CollectionView
+                        x:Name="ListSSO"
+                        ItemsSource="{Binding ListSSO}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout>
+                                    <Button Text="{Binding Label}"
+                                            CornerRadius="15"
+                                            BackgroundColor="#FFFFFF"
+                                            TextColor="#6574CF"
+                                            CommandParameter="{Binding Value}"
+                                            Clicked="OpenBrowser_OnClicked"/>
+                                </StackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
                 </StackLayout>
-             <AbsoluteLayout Grid.RowSpan="2" Margin="-20" IsVisible="{Binding IsLoading}" VerticalOptions="FillAndExpand" Opacity="0.6" BackgroundColor="Gray" >
-                <ActivityIndicator IsRunning="True" AbsoluteLayout.LayoutFlags="PositionProportional" Color="White" AbsoluteLayout.LayoutBounds=".5,.5,-1,-1" />
-            </AbsoluteLayout>
+                <AbsoluteLayout Grid.RowSpan="2" Margin="-20" IsVisible="{Binding IsLoading}" VerticalOptions="FillAndExpand" Opacity="0.6" BackgroundColor="Gray" >
+                    <ActivityIndicator IsRunning="True" AbsoluteLayout.LayoutFlags="PositionProportional" Color="White" AbsoluteLayout.LayoutBounds=".5,.5,-1,-1" />
+                </AbsoluteLayout>
             </Grid>
         </ScrollView>
     </ContentPage.Content>

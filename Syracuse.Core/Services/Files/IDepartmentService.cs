@@ -5,6 +5,7 @@ namespace Syracuse.Mobitheque.Core.Services.Files
 {
     public interface IDepartmentService
     {
-        Task<Library> GetLibraries(string url, bool refresh = false);
+        Task<Department[]> GetDepartments();
+        Task<Library[]> GetLibraries(bool refresh = false);
     }
 }

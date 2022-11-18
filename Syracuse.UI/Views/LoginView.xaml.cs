@@ -3,6 +3,7 @@ using MvvmCross.Forms.Views;
 using Syracuse.Mobitheque.Core;
 using Syracuse.Mobitheque.Core.ViewModels;
 using System;
+using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using ZXing;
@@ -10,8 +11,13 @@ using ZXing;
 namespace Syracuse.Mobitheque.UI.Views
 {
     [MvxContentPagePresentation()]
-     public partial class LoginView : MvxContentPage<LoginViewModel>
+    public partial class LoginView : MvxContentPage<LoginViewModel>
     {
+        Page page;
+        Page networkErrorPage = new NetworkErrorView();
+        bool isnetworkError = false;
+        public NavigationPage MainPage = new NavigationPage();
+
         public ZxingScannerView scanner;
         public LoginView()
         {
@@ -39,22 +45,21 @@ namespace Syracuse.Mobitheque.UI.Views
         }
         protected override void OnAppearing()
         {
-            ListSSO.Children.Clear();
-            foreach (var item in this.ViewModel.ListSSO)
-            {
-                Button button = new Button();
-                button.Text = item.Label;
-                button.CornerRadius = 15;
-                button.BackgroundColor = Color.FromHex("#FFFFFF");
-                button.TextColor = Color.FromHex("#6574CF");
-                button.CommandParameter = item.Value;
-                button.Clicked += OpenBrowserProvider_OnClicked;
-                ListSSO.Children.Add(button);
-            }
-            ListSSO.VerticalOptions = LayoutOptions.FillAndExpand;
-            FormLayout.VerticalOptions = LayoutOptions.FillAndExpand;
-            this.ViewModel.RaiseAllPropertiesChanged();
             base.OnAppearing();
+            Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
+            Connectivity_test();
+            //foreach (var item in this.ViewModel.ListSSO)
+            //{
+            //    Button button = new Button();
+            //    button.Text = item.Label;
+            //    button.CornerRadius = 15;
+            //    button.BackgroundColor = Color.FromHex("#FFFFFF");
+            //    button.TextColor = Color.FromHex("#6574CF");
+            //    button.CommandParameter = item.Value;
+            //    button.Clicked += OpenBrowserProvider_OnClicked;
+            //    ListSSO.Children.Add(button);
+            //}
+            //ListSSO.VerticalOptions = LayoutOptions.FillAndExpand;
         }
         public void Handle_Focus(object sender, FocusEventArgs args)
         {
@@ -65,6 +70,11 @@ namespace Syracuse.Mobitheque.UI.Views
         {
             (this.DataContext as LoginViewModel).OnDisplayAlert += LoginView_OnDisplayAlert;
             base.OnBindingContextChanged();
+        }
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            Connectivity.ConnectivityChanged -= Connectivity_ConnectivityChanged;
         }
 
         private void LoginView_OnDisplayAlert(string title, string message, string button) => this.DisplayAlert(title, message, button);
@@ -83,7 +93,7 @@ namespace Syracuse.Mobitheque.UI.Views
                 this.UserNameInput.Focus();
                 this.UserNameInput.Text = result.Text;
             });
-           
+
         }
 
         private async void OpenBrowser_OnClicked(object sender, EventArgs e)
@@ -127,6 +137,25 @@ namespace Syracuse.Mobitheque.UI.Views
                 await DisplayAlert(ApplicationResource.Warning, String.Format(ApplicationResource.ErrorOccurred), ApplicationResource.ButtonValidation);
             }
 
+        }
+        public async Task Connectivity_test()
+        {
+            if (Connectivity.NetworkAccess != NetworkAccess.Internet)
+            {
+                this.LoginView_OnDisplayAlert(ApplicationResource.Warning, ApplicationResource.NetworkDisable, ApplicationResource.ButtonValidation);
+                this.isnetworkError = true;
+            }
+            else
+            {
+                if (this.isnetworkError && MainPage is NavigationPage)
+                {
+                    this.isnetworkError = false;
+                }
+            }
+        }
+        public void Connectivity_ConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
+        {
+            Connectivity_test().Wait();
         }
 
     }

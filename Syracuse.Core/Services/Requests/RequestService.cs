@@ -27,7 +27,9 @@ namespace Syracuse.Mobitheque.Core.Services.Requests
             this.handler = new HttpClientHandler()
             {
                 UseCookies = true,
-                CookieContainer = this.cookies
+                CookieContainer = this.cookies,
+                ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }
+
 
             };
             this.token = this.Timestamp();
@@ -45,7 +47,9 @@ namespace Syracuse.Mobitheque.Core.Services.Requests
                 var tempohandler = new HttpClientHandler()
                 {
                     UseCookies = true,
-                    CookieContainer = this.cookies
+                    CookieContainer = this.cookies,
+                   ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }
+
                 };
                 tempohandler.AllowAutoRedirect = false;
                 tempohandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
@@ -165,7 +169,9 @@ namespace Syracuse.Mobitheque.Core.Services.Requests
             this.handler = new HttpClientHandler()
             {
                 UseCookies = true,
-                CookieContainer = this.cookies
+                CookieContainer = this.cookies,
+               ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }
+
             };
         }
 
@@ -175,7 +181,9 @@ namespace Syracuse.Mobitheque.Core.Services.Requests
             this.handler = new HttpClientHandler()
             {
                 UseCookies = true,
-                CookieContainer = this.cookies
+                CookieContainer = this.cookies,
+                ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }
+
 
             };
         }
@@ -271,6 +279,40 @@ namespace Syracuse.Mobitheque.Core.Services.Requests
             httpClient.DefaultRequestHeaders.CacheControl.NoStore = true;
             httpClient.DefaultRequestHeaders.CacheControl.NoCache = true;
             this.requests = RestService.For<IRefitRequests>(httpClient);
+        }
+
+        public async Task<InstanceResult<object>> AnswerDemand(DemandsOptions options, Action<Exception> error = null)
+        {
+            if (!App.AppState.NetworkConnection)
+            {
+                Debug.WriteLine("NetworkConnection" + App.AppState.NetworkConnection);
+            }
+            await this.InitializeHttpClient();
+            var status = new InstanceResult<object>();
+            try
+            {
+                var timestamp = this.Timestamp();
+                this.token = this.Timestamp();
+                if (options == null)
+                    throw new ArgumentNullException(nameof(options));
+                status = await this.requests.AnswerDemand<InstanceResult<object>>(options);
+                await UpdateCookies();
+            }
+            catch (Exception ex)
+            {
+                status.Errors = new Error[1];
+                if (!App.AppState.NetworkConnection)
+                {
+                    status.Errors[0] = new Error(ApplicationResource.NetworkDisable);
+                }
+                else
+                {
+                    status.Errors[0] = new Error(ApplicationResource.ErrorOccurred);
+                }
+                error?.Invoke(ex);
+            }
+            return status;
+
         }
 
         public async Task<AccountSummary> GetSummary( string baseUrl = null, Cookie[] CookiesArray = null, Action<Exception> error = null)
@@ -644,7 +686,7 @@ namespace Syracuse.Mobitheque.Core.Services.Requests
                     await UpdateCookies();
                     CookiesSave user = await App.Database.GetActiveUser();
                     if (username != "") user.Username = username;
-                    if (codebare != "") user.CodeBare = codebare;
+                  //  if (codebare != "") user.CodeBare = codebare;
                     await App.Database.SaveItemAsync(user);
                 }
                 return status;
